@@ -320,8 +320,36 @@
     <!-- TOAST -->
     <div id="toast-msg" class="toast-msg"></div>
 
+    <!-- SportSphere AI Assistant Widget -->
+    <div id="ai-widget" class="ai-widget">
+        <div id="ai-chat-window" class="glass ai-chat-window">
+            <div class="ai-chat-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-robot" style="color: var(--accent-primary);"></i>
+                    <div>
+                        <strong style="display: block; font-size: 0.9rem;">SportSphere AI</strong>
+                        <span style="font-size: 0.7rem; color: #10b981;">● Online Assistant</span>
+                    </div>
+                </div>
+                <button onclick="toggleAIChat()" style="background:none; border:none; color:white; cursor:pointer;"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="ai-messages" class="ai-messages">
+                <div class="ai-msg bot">Hello! I'm your SportSphere AI. How can I help you find the perfect game today?</div>
+            </div>
+            <div class="ai-chat-input">
+                <input type="text" id="ai-input" placeholder="Ask about venues or sports..." onkeypress="handleAIKey(event)">
+                <button onclick="sendAIMessage()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <button class="ai-float-btn" onclick="toggleAIChat()">
+            <i class="fas fa-comment-dots"></i>
+            <span class="ai-notif">1</span>
+        </button>
+    </div>
+
     <script src="js/main.js"></script>
     <script src="js/booking.js"></script>
+    <script src="js/ai-brain.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const ONE_HOUR = 60 * 60 * 1000;
@@ -336,7 +364,6 @@
                         userBtn.innerText = 'User Dashboard';
                         userBtn.href = 'user-dashboard.html';
                     }
-                    // Hero button too
                     const heroBtn = document.querySelector('.hero-actions a[href="user-auth.html"]');
                     if (heroBtn) {
                         heroBtn.innerHTML = '<i class="fas fa-th-large"></i> Go to Dashboard';
@@ -362,6 +389,63 @@
                 }
             }
         });
+
+        // SportSphere AI Core Logic (Local Smart Brain Engine)
+        let currentAILang = 'en';
+
+        function toggleAIChat() {
+            const window = document.getElementById('ai-chat-window');
+            window.classList.toggle('active');
+            document.querySelector('.ai-notif').style.display = 'none';
+        }
+
+        function handleAIKey(e) { if(e.key === 'Enter') sendAIMessage(); }
+
+        async function sendAIMessage() {
+            const input = document.getElementById('ai-input');
+            const msg = input.value.trim();
+            if(!msg) return;
+
+            appendAIMessage(msg, 'user');
+            input.value = '';
+
+            // Language switch detection
+            const lowMsg = msg.toLowerCase();
+            if (lowMsg.includes("sinhala") || lowMsg.includes("සිංහල")) currentAILang = 'si';
+            if (lowMsg.includes("english") || lowMsg.includes("ඉංග්‍රීසි")) currentAILang = 'en';
+
+            const container = document.getElementById('ai-messages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'ai-msg bot typing';
+            typingDiv.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+            typingDiv.id = 'ai-typing';
+            container.appendChild(typingDiv);
+            container.scrollTop = container.scrollHeight;
+
+            // Simulated AI Thinking Delay (800ms)
+            setTimeout(() => {
+                document.getElementById('ai-typing')?.remove();
+                
+                // Use SSB (Smart Semantic Brain) from js/ai-brain.js
+                try {
+                    const response = SSB.process(msg);
+                    appendAIMessage(response, 'bot');
+                } catch (e) {
+                    console.error("AI Error:", e);
+                    appendAIMessage("I'm having a little trouble thinking. Can you try asking in a different way?", 'bot');
+                }
+            }, 800);
+        }
+
+        function appendAIMessage(text, side) {
+            const container = document.getElementById('ai-messages');
+            if(!container) return;
+            const div = document.createElement('div');
+            div.className = `ai-msg ${side}`;
+            div.innerText = text;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
     </script>
 </body>
 </html>
