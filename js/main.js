@@ -100,6 +100,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const resultEl = document.getElementById('roi-result');
         if (resultEl) resultEl.innerText = `LKR ${yieldValue.toFixed(1)}M`;
     };
+
+    // 5. Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+
+    if (currentTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+    }
+
+    themeToggle.addEventListener('click', () => {
+        let theme = document.documentElement.getAttribute('data-theme');
+        if (theme === 'light') {
+            document.documentElement.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'dark');
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        }
+    });
 });
 
 /**
@@ -111,7 +133,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Chart.js
     const ctx = document.getElementById('revenueChart');
     if (ctx) {
-        new Chart(ctx, {
+        const getStyle = (varName) => getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+        
+        const chart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -131,10 +155,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 responsive: true,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8' } },
-                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                    y: { 
+                        beginAtZero: true, 
+                        grid: { color: 'rgba(128,128,128,0.1)' }, 
+                        ticks: { color: getStyle('--text-secondary') } 
+                    },
+                    x: { 
+                        grid: { display: false }, 
+                        ticks: { color: getStyle('--text-secondary') } 
+                    }
                 }
             }
+        });
+
+        // Update chart when theme changes
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            setTimeout(() => {
+                chart.options.scales.y.ticks.color = getStyle('--text-secondary');
+                chart.options.scales.x.ticks.color = getStyle('--text-secondary');
+                chart.update();
+            }, 100);
         });
     }
 
