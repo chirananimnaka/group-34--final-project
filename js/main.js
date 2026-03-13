@@ -107,7 +107,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (currentTheme === 'light') {
         document.documentElement.setAttribute('data-theme', 'light');
-        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>'; // Click for dark
+    } else {
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>'; // Click for light
     }
 
     themeToggle.addEventListener('click', () => {
@@ -115,11 +117,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (theme === 'light') {
             document.documentElement.removeAttribute('data-theme');
             localStorage.setItem('theme', 'dark');
-            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
         } else {
             document.documentElement.setAttribute('data-theme', 'light');
             localStorage.setItem('theme', 'light');
-            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
         }
     });
 });
