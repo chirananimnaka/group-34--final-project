@@ -962,22 +962,30 @@
 
         async function downloadImage(url, filename) {
             try {
-                showToast("⏳ Preparing download...");
+                showToast("⏳ Starting Secure Download...");
                 const response = await fetch(url);
+                if (!response.ok) throw new Error('Network error');
+                
                 const blob = await response.blob();
                 const blobUrl = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = blobUrl;
-                link.download = filename + ".jpg";
+                
+                // Try to get extension from blob type
+                const ext = blob.type.split('/')[1] || 'jpg';
+                link.download = `${filename}.${ext}`;
+                
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
                 window.URL.revokeObjectURL(blobUrl);
-                showToast("📥 Image downloaded!");
+                showToast("📥 Download Complete!");
             } catch (error) {
-                console.error("Download Error:", error);
-                window.open(url, '_blank'); // Fallback
-                showToast("⚠️ Standard download failed. Opened in new tab.");
+                console.warn("CORS/Security limit hit, falling back to new tab:", error);
+                showToast("↗️ Opening to Save: Right-click & 'Save As' in the new tab");
+                setTimeout(() => {
+                    window.open(url, '_blank');
+                }, 1000);
             }
         }
 
