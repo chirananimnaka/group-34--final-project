@@ -5,7 +5,7 @@
  */
 
 // ══════════════════════════════════════════
-// DATA — 57 Centers (added more pickleball centers across Sri Lanka)
+// DATA — 61 Centers (added more pickleball centers across Sri Lanka)
 // ══════════════════════════════════════════
 const CENTERS = [
     // ── COLOMBO ──
@@ -33,6 +33,10 @@ const CENTERS = [
     { id:45, name:"Austasia Sports Club",           city:"Colombo",      location:"Thalawathugoda",                   sports:["Badminton","Swimming","Squash"],                      emoji:"🏅", price:1400, rating:4.4, indoor:true,  img:"https://images.unsplash.com/photo-1519315901367-f34ff9154487?w=600&auto=format&fit=crop&q=60" },
     { id:52, name:"Pickleball Park Colombo",          city:"Colombo",      location:"Reid Avenue, Colombo 7",           sports:["Pickleball"],                                         emoji:"🏓", price:1600, rating:4.6, indoor:true,  img:"https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=600&auto=format&fit=crop&q=60" },
     { id:53, name:"Elite Pickleball Club",           city:"Colombo",      location:"Thimbirigasyaya, Colombo 5",       sports:["Pickleball","Tennis"],                                emoji:"🏓", price:1800, rating:4.8, indoor:true,  img:"https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?w=600&auto=format&fit=crop&q=60" },
+    { id:58, name:"The Pickle Island",               city:"Colombo",      location:"Arcade Independence / Excel World", sports:["Pickleball"],                                         emoji:"🏓", price:1800, rating:4.7, indoor:true,  img:"https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=600&auto=format&fit=crop&q=60" },
+    { id:59, name:"Pickle Colombo",                  city:"Colombo",      location:"6 Flower Terrace, Colombo 3",      sports:["Pickleball"],                                         emoji:"🏓", price:2000, rating:4.8, indoor:true,  img:"https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=600&auto=format&fit=crop&q=60" },
+    { id:60, name:"Misfits Arena",                   city:"Colombo",      location:"Boralesgamuwa",                    sports:["Pickleball"],                                         emoji:"🏓", price:1500, rating:4.5, indoor:true,  img:"https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=600&auto=format&fit=crop&q=60" },
+    { id:61, name:"Pipinya Pickleball Club",         city:"Colombo",      location:"670 Galle Road, Moratuwa",         sports:["Pickleball"],                                         emoji:"🏓", price:1400, rating:4.4, indoor:true,  img:"https://images.unsplash.com/photo-1560272564-c83b66b1ad12?w=600&auto=format&fit=crop&q=60" },
     // ── KANDY ──
     { id:11, name:"Kandy Esplanade Grounds",         city:"Kandy",        location:"Esplanade Road, Kandy",            sports:["Football","Rugby","Cricket"],                         emoji:"🏉", price:3000, rating:4.7, indoor:false, img:"https://images.unsplash.com/photo-1511067007398-7e4b90cfa4bc?w=600&auto=format&fit=crop&q=60" },
     { id:12, name:"Kandy SC Swimming Pool",          city:"Kandy",        location:"Sirimavo Bandaranaike Mw, Kandy",  sports:["Swimming"],                                           emoji:"🏊", price:800,  rating:4.4, indoor:true,  img:"https://images.unsplash.com/photo-1519315901367-f34ff9154487?w=600&auto=format&fit=crop&q=60" },
