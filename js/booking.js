@@ -147,14 +147,11 @@ function isRangeFree(centerId, startIdx, hours) {
 const STORAGE_KEY = "ss_bookings_v4";
 
 async function loadBookings() {
-    try {
-        if (window.storage) {
-            const result = await window.storage.get(STORAGE_KEY);
-            return result ? JSON.parse(result.value) : [];
-        }
-    } catch (_) {}
     // fallback
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); } catch(_) { return []; }
+    try { 
+        const items = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        return Array.isArray(items) ? items.filter(b => b && typeof b === 'object') : [];
+    } catch(_) { return []; }
 }
 
 async function saveBookings(bookings) {
@@ -606,25 +603,25 @@ window.finishBooking = async function(booking) {
         <div class="booking-success">
             <div class="success-anim">🎉</div>
             <h2>Booking Confirmed!</h2>
-            <p>Your court at <strong>${selectedCenter.name}</strong> is reserved.</p>
-            ${booking.status.includes('Pay at Venue') ? 
+            <p>Your court at <strong>${selectedCenter.name || 'Arena'}</strong> is reserved.</p>
+            ${(booking.status || '').includes('Pay at Venue') ? 
                 `<p style="color: #fbbf24; font-size: 0.9rem; margin-top: -0.5rem;"><i class="fas fa-info-circle"></i> Reminder: Settlement required within 7 days.</p>` : 
-                `<p style="color: #10b981; font-size: 0.9rem; margin-top: -0.5rem;"><i class="fas fa-check-double"></i> Payment received successfully.</p>`
+                `<p style="color: #10b981; font-size: 0.9rem; margin-top: -0.5rem;"><i class="fas fa-check-double"></i> Transaction completed successfully.</p>`
             }
             <div class="booking-ref-box">
                 <small>Reference Number</small>
-                <strong>${ref}</strong>
+                <strong>${ref || 'N/A'}</strong>
             </div>
             <div class="booking-summary" style="margin-top:1.5rem;">
-                <div class="summary-row"><span>Sport</span><span>${sport}</span></div>
-                <div class="summary-row"><span>Date</span><span>${date}</span></div>
+                <div class="summary-row"><span>Sport</span><span>${sport || 'N/A'}</span></div>
+                <div class="summary-row"><span>Date</span><span>${date || 'N/A'}</span></div>
                 <div class="summary-row"><span>Time</span><span>${startTime} – ${endTime}</span></div>
                 <div class="summary-row"><span>Duration</span><span>${selectedHours} hour${selectedHours > 1 ? "s" : ""}</span></div>
-                <div class="summary-row"><span>Players</span><span>${players}</span></div>
-                <div class="summary-row total"><span>Amount Due</span><span style="color:var(--accent-primary)">Rs. ${total.toLocaleString()}</span></div>
+                <div class="summary-row"><span>Players</span><span>${players || 1}</span></div>
+                <div class="summary-row total"><span>Amount Due</span><span style="color:var(--accent-primary)">Rs. ${(total || 0).toLocaleString()}</span></div>
                 <div class="summary-row" style="border-top: 1px solid rgba(255,255,255,0.05); margin-top: 5px; padding-top: 5px;">
                     <span>Status</span>
-                    <span style="color: ${booking.status.includes('Paid') ? '#10b981' : '#fbbf24'}">${booking.status}</span>
+                    <span style="color: ${(booking.status || '').includes('Paid') ? '#10b981' : '#fbbf24'}">${booking.status || 'Confirmed'}</span>
                 </div>
             </div>
             <div style="display:flex;gap:1rem;margin-top:2rem;justify-content:center;flex-wrap:wrap;">
@@ -675,22 +672,29 @@ window.renderMyBookings = function() {
         return;
     }
 
-    container.innerHTML = myBookings.map(b => `
+    const bookingsToRender = myBookings.filter(b => b && typeof b === 'object');
+    
+    container.innerHTML = bookingsToRender.map(b => {
+        const bStatus = b.status || 'Confirmed';
+        const isPaid = (bStatus || '').includes('Paid');
+        const bTotal = b.total || 0;
+        
+        return `
         <div class="booking-item glass fade-up" id="bi-${b.id}" style="padding: 18px 25px; margin-bottom: 15px; display: block;">
             <div class="booking-item-info">
                 <h4 style="font-size: 1.6rem; margin-bottom: 12px; display: flex; align-items: center; gap: 15px;">
-                    <span style="font-size: 2.5rem; background: rgba(255,255,255,0.05); width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 14px;">${b.emoji}</span>
-                    ${b.center}
+                    <span style="font-size: 2.5rem; background: rgba(255,255,255,0.05); width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 14px;">${b.emoji || '🏟️'}</span>
+                    ${b.center || 'Sports Center'}
                 </h4>
                 <p style="font-size: 0.95rem; margin-bottom: 15px;">
-                    <i class="fas fa-map-marker-alt"></i> ${b.location} &nbsp;·&nbsp;
-                    <i class="fas fa-trophy"></i> ${b.sport} &nbsp;·&nbsp;
-                    <i class="fas fa-calendar"></i> ${b.date}
+                    <i class="fas fa-map-marker-alt"></i> ${b.location || 'Sri Lanka'} &nbsp;·&nbsp;
+                    <i class="fas fa-trophy"></i> ${b.sport || 'Sports'} &nbsp;·&nbsp;
+                    <i class="fas fa-calendar"></i> ${b.date || 'Today'}
                 </p>
                 <div style="margin-top:0.8rem; font-size: 0.9rem; color: var(--text-secondary); background: rgba(255,255,255,0.03); padding: 12px 18px; border-radius: 12px; display: inline-flex; gap: 15px; flex-wrap: wrap;">
-                    <span><i class="fas fa-clock" style="color: var(--accent-primary);"></i> ${b.startTime} – ${b.endTime}</span>
-                    <span><i class="fas fa-user" style="color: var(--accent-primary);"></i> ${b.name}</span>
-                    <strong style="color: white;"><i class="fas fa-tag" style="color: var(--accent-primary);"></i> Rs. ${b.total.toLocaleString()}</strong>
+                    <span><i class="fas fa-clock" style="color: var(--accent-primary);"></i> ${b.startTime || '--:--'} – ${b.endTime || '--:--'}</span>
+                    <span><i class="fas fa-user" style="color: var(--accent-primary);"></i> ${b.name || 'User'}</span>
+                    <strong style="color: white;"><i class="fas fa-tag" style="color: var(--accent-primary);"></i> Rs. ${bTotal.toLocaleString()}</strong>
                 </div>
                 
                 <!-- Rating UI -->
@@ -698,17 +702,17 @@ window.renderMyBookings = function() {
                     <span style="font-size: 0.85rem; margin-right: 12px;">Rate your experience:</span>
                     <div class="stars-input" data-bid="${b.id}" style="font-size: 1.2rem;">
                         ${[1,2,3,4,5].map(num => `
-                            <i class="${b.userRating >= num ? 'fas' : 'far'} fa-star" 
+                            <i class="${(b.userRating || 0) >= num ? 'fas' : 'far'} fa-star" 
                                onclick="setRating('${b.id}', ${num})" 
-                               style="cursor:pointer; color: ${b.userRating >= num ? '#f59e0b' : 'var(--text-secondary)'}; margin-right: 5px;"></i>
+                               style="cursor:pointer; color: ${(b.userRating || 0) >= num ? '#f59e0b' : 'var(--text-secondary)'}; margin-right: 5px;"></i>
                         `).join("")}
                     </div>
                 </div>
 
                 <div style="margin-top:1.5rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;">
-                    <span class="booking-ref-tag" style="padding: 6px 12px; font-size: 0.8rem;">REF: ${b.id}</span>
-                    <span class="booking-status-badge" style="padding: 6px 15px; font-size: 0.8rem; background: ${b.status.includes('Paid') ? 'rgba(34,197,94,0.15)' : 'rgba(251,146,60,0.15)'}; color: ${b.status.includes('Paid') ? '#22c55e' : '#fbbf24'}; border-color: ${b.status.includes('Paid') ? 'rgba(34,197,94,0.3)' : 'rgba(251,146,60,0.3)'}">
-                        ${b.status.includes('Paid') ? '✓' : '🕒'} ${b.status}
+                    <span class="booking-ref-tag" style="padding: 6px 12px; font-size: 0.8rem;">REF: ${b.id || 'N/A'}</span>
+                    <span class="booking-status-badge" style="padding: 6px 15px; font-size: 0.8rem; background: ${isPaid ? 'rgba(34,197,94,0.15)' : 'rgba(251,146,60,0.15)'}; color: ${isPaid ? '#22c55e' : '#fbbf24'}; border-color: ${isPaid ? 'rgba(34,197,94,0.3)' : 'rgba(251,146,60,0.3)'}">
+                        ${isPaid ? '✓' : '🕒'} ${bStatus}
                     </span>
                     <button class="btn btn-outline" style="padding: 8px 18px; font-size: 0.85rem; border-color: var(--accent-primary); color: white;" onclick="downloadReceipt('${b.id}')">
                         <i class="fas fa-file-pdf" style="color: #ef4444; margin-right: 8px;"></i> Download Receipt (PDF)
@@ -718,7 +722,7 @@ window.renderMyBookings = function() {
             <button class="cancel-booking-btn" onclick="cancelBooking('${b.id}')" style="padding: 10px 20px; font-size: 0.85rem;">
                 <i class="fas fa-times"></i> Cancel
             </button>
-        </div>`).join("");
+        </div>`}).join("");
 };
 
 window.cancelBooking = async function(id) {
