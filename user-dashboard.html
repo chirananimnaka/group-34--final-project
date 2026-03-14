@@ -211,6 +211,10 @@
             background: var(--accent-primary);
             border-color: var(--accent-primary);
         }
+        .action-btn.download:hover {
+            background: #10b981;
+            border-color: #10b981;
+        }
 
         /* Mock Payment Modal Styles */
         .payment-card-input {
@@ -942,15 +946,39 @@
                         <h4 style="color: white; margin: 0; font-size: 1rem;">Game Moment</h4>
                     </div>
                     <div class="memory-actions">
-                        <button class="action-btn view" onclick="window.open('${m.url}', '_blank')">
+                        <button class="action-btn view" onclick="window.open('${m.url}', '_blank')" title="View Full Image">
                             <i class="fas fa-expand-alt"></i>
                         </button>
-                        <button class="action-btn delete" onclick="${isCloud ? `deleteCloudMemory('${m.id}')` : `deleteMemory('${m.id}')`}">
+                        <button class="action-btn download" onclick="downloadImage('${m.url}', 'SportSphere_Memory_${m.date.replace(/\//g, '-')}')" title="Download Image">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="action-btn delete" onclick="${isCloud ? `deleteCloudMemory('${m.id}')` : `deleteMemory('${m.id}')`}" title="Delete Memory">
                             <i class="fas fa-trash-alt"></i>
                         </button>
                     </div>
                 </div>
             `;
+        }
+
+        async function downloadImage(url, filename) {
+            try {
+                showToast("⏳ Preparing download...");
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = filename + ".jpg";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(blobUrl);
+                showToast("📥 Image downloaded!");
+            } catch (error) {
+                console.error("Download Error:", error);
+                window.open(url, '_blank'); // Fallback
+                showToast("⚠️ Standard download failed. Opened in new tab.");
+            }
         }
 
         async function deleteCloudMemory(id) {
