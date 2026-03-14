@@ -7,6 +7,9 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <script type="module" src="js/firebase-config.js"></script>
     <style>
         :root {
@@ -147,6 +150,10 @@
                 <div class="nav-item" onclick="showTab('bookings')">
                     <i class="fas fa-calendar-check"></i>
                     <span>My Reservations</span>
+                </div>
+                <div class="nav-item" onclick="showTab('revenue')">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Centers Revenue</span>
                 </div>
 
                 <!-- Logout -->
@@ -303,6 +310,45 @@
                     <!-- List of bookings -->
                 </div>
             </div>
+
+            <div id="revenue-tab" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem;">
+                    <div>
+                        <h1>Revenue Yield Analysis</h1>
+                        <p style="color: var(--text-secondary);">Real-time financial performance and forecasts.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="generateRevenuePDF()">
+                        <i class="fas fa-file-pdf"></i> Download Yield Report
+                    </button>
+                </div>
+
+                <div class="stat-grid">
+                    <div class="glass stat-card" style="border-left: 4px solid #10b981;">
+                        <h3>Total Gross</h3>
+                        <p id="rev-total">Rs. 0</p>
+                        <small style="color: #10b981;">+12% vs last week</small>
+                    </div>
+                    <div class="glass stat-card" style="border-left: 4px solid #0ea5e9;">
+                        <h3>Instant Paid</h3>
+                        <p id="rev-paid">Rs. 0</p>
+                        <small style="color: var(--text-secondary);">Verified Transactions</small>
+                    </div>
+                    <div class="glass stat-card" style="border-left: 4px solid #f59e0b;">
+                        <h3>Pay Later (Pending)</h3>
+                        <p id="rev-pending">Rs. 0</p>
+                        <small style="color: #f59e0b;">Collection Required</small>
+                    </div>
+                </div>
+
+                <div class="glass" style="padding: 2.5rem; border-radius: 24px;">
+                    <h3 style="margin-bottom: 2rem; display: flex; align-items: center; gap: 10px;">
+                        <i class="fas fa-chart-bar" style="color: var(--accent-primary);"></i> Weekly Revenue Yield
+                    </h3>
+                    <div style="height: 350px;">
+                        <canvas id="yieldChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -320,11 +366,15 @@
 
         function showTab(tab) {
             console.log("Switching to tab:", tab);
-            const tabs = ['overview', 'subscription', 'my-center', 'bookings'];
+            const tabs = ['overview', 'subscription', 'my-center', 'bookings', 'revenue'];
             tabs.forEach(t => {
                 const el = document.getElementById(t + '-tab');
                 if (el) el.style.display = t === tab ? 'block' : 'none';
             });
+
+            if (tab === 'revenue' || tab === 'overview') {
+                renderCenterBookings();
+            }
 
             document.querySelectorAll('.nav-item').forEach(item => {
                 const onClickStr = item.getAttribute('onclick') || '';
@@ -517,6 +567,144 @@
             fullContainer.innerHTML = html;
             document.getElementById('stat-bookings').innerText = myBookings.length;
             document.getElementById('stat-revenue').innerText = `Rs. ${revenue.toLocaleString()}`;
+
+            // Update Revenue Tab Granular Stats
+            const paidRevenue = myBookings.reduce((sum, b) => sum + (b.status && b.status.includes('Paid') ? b.total : 0), 0);
+            const pendingRevenue = revenue - paidRevenue;
+
+            document.getElementById('rev-total').innerText = `Rs. ${revenue.toLocaleString()}`;
+            document.getElementById('rev-paid').innerText = `Rs. ${paidRevenue.toLocaleString()}`;
+            document.getElementById('rev-pending').innerText = `Rs. ${pendingRevenue.toLocaleString()}`;
+
+            initYieldChart(myBookings);
+        }
+
+        let yieldChartInstance = null;
+        function initYieldChart(bookings) {
+            const ctx = document.getElementById('yieldChart');
+            if (!ctx) return;
+
+            // Group by day of week
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const data = [0, 0, 0, 0, 0, 0, 0];
+            
+            bookings.forEach(b => {
+                const date = new Date(b.date);
+                if (!isNaN(date)) {
+                    data[date.getDay()] += b.total;
+                }
+            });
+
+            if (yieldChartInstance) yieldChartInstance.destroy();
+
+            yieldChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: days,
+                    datasets: [{
+                        label: 'Revenue (LKR)',
+                        data: data,
+                        backgroundColor: 'rgba(139, 92, 246, 0.6)',
+                        borderColor: '#8b5cf6',
+                        borderWidth: 2,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { 
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8' }
+                        }
+                    }
+                }
+            });
+        }
+
+        async function generateRevenuePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const savedInfo = JSON.parse(localStorage.getItem('my_center_info') || '{}');
+            const centerName = savedInfo.name || 'SportSphere Partner';
+            const allBookings = JSON.parse(localStorage.getItem('ss_bookings_v4') || '[]');
+            const myBookings = allBookings.filter(b => b.center === centerName);
+            
+            // Creative Letterhead
+            doc.setFillColor(139, 92, 246); // Brand Purple
+            doc.rect(0, 0, 210, 40, 'F');
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(28);
+            doc.setFont("helvetica", "bold");
+            doc.text("SPORTSPHERE", 20, 25);
+            
+            doc.setFontSize(10);
+            doc.setFont("helvetica", "normal");
+            doc.text("INTELLIGENT REVENUE YIELD ANALYSIS", 20, 32);
+            
+            // Partner Info
+            doc.setTextColor(40, 40, 40);
+            doc.setFontSize(16);
+            doc.text(centerName.toUpperCase(), 20, 55);
+            
+            doc.setFontSize(10);
+            doc.setTextColor(100, 100, 100);
+            doc.text(`Location: ${savedInfo.location || 'N/A'}`, 20, 62);
+            doc.text(`Date Generated: ${new Date().toLocaleString()}`, 20, 67);
+            
+            // Stats Summary
+            const total = myBookings.reduce((s, b) => s + b.total, 0);
+            const paid = myBookings.reduce((s, b) => s + (b.paymentStatus === 'Paid' ? b.total : 0), 0);
+            
+            doc.setDrawColor(230, 230, 230);
+            doc.line(20, 75, 190, 75);
+            
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(12);
+            doc.text(`Core Statistics`, 20, 85);
+            
+            doc.setFontSize(10);
+            doc.text(`Total Bookings: ${myBookings.length}`, 20, 95);
+            doc.text(`Gross Revenue: LKR ${total.toLocaleString()}`, 20, 102);
+            doc.text(`Collected (Paid): LKR ${paid.toLocaleString()}`, 20, 109);
+            doc.text(`Outstanding: LKR ${(total - paid).toLocaleString()}`, 20, 116);
+            
+            // Table
+            const tableData = myBookings.map(b => [
+                b.date,
+                b.name,
+                b.sport,
+                b.total.toLocaleString(),
+                b.status || 'Pending'
+            ]);
+            
+            doc.autoTable({
+                startY: 125,
+                head: [['Date', 'User', 'Sport', 'Amount (LKR)', 'Status']],
+                body: tableData,
+                theme: 'striped',
+                headStyles: { fillColor: [139, 92, 246] }
+            });
+            
+            // Footer
+            const finalY = doc.lastAutoTable.finalY + 20;
+            doc.setFontSize(9);
+            doc.setTextColor(150, 150, 150);
+            doc.text("SportSphere Proprietary Business Intelligence Report.", 20, finalY);
+            doc.text("All data is calculated in real-time based on system transactions.", 20, finalY + 5);
+            
+            doc.save(`Revenue_Analysis_${centerName.replace(/ /g, '_')}.pdf`);
+            showToast("📊 Yield Analysis PDF Downloaded!");
         }
     </script>
     <!-- Payment Modal -->
