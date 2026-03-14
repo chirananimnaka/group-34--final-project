@@ -67,10 +67,28 @@ const SSB = {
         }
 
         // --- 🏟️ Real-time Venue & Slot Checker ---
-        const sports = ["badminton", "cricket", "futsal", "football", "tennis", "basketball", "swimming", "rugby", "padel", "pickleball"];
-        const foundSport = sports.find(s => text.includes(s));
+        const sportsMap = {
+            "tennis": ["tennis", "tenis", "tennis court"],
+            "cricket": ["cricket", "criket", "crichet"],
+            "badminton": ["badminton", "badminton court", "battminton"],
+            "futsal": ["futsal", "futsul", "futzal"],
+            "football": ["football", "soccer", "footbal"],
+            "basketball": ["basketball", "basketbal"],
+            "swimming": ["swimming", "swim", "pool"],
+            "rugby": ["rugby", "rugbi"],
+            "padel": ["padel", "paddel"],
+            "pickleball": ["pickleball", "pikleball"]
+        };
 
-        if (text.includes("slot") || text.includes("time") || text.includes("free") || text.includes("available")) {
+        let foundSport = null;
+        for (const [key, variants] of Object.entries(sportsMap)) {
+            if (variants.some(v => text.includes(v))) {
+                foundSport = key;
+                break;
+            }
+        }
+
+        if (text.includes("slot") || text.includes("time") || text.includes("free") || text.includes("available") || text.includes("වේලාව")) {
             if (foundSport) {
                 const matches = allCenters.filter(v => v.sports.some(s => s.toLowerCase().includes(foundSport)));
                 if (matches.length > 0) {
@@ -109,7 +127,11 @@ const SSB = {
         }
 
         if (foundSport) {
-            return `For ${foundSport}, the most recommended spots are ${allCenters.filter(v=>v.sports.includes(foundSport.charAt(0).toUpperCase() + foundSport.slice(1)))[0]?.name || 'our elite arenas'}.`;
+            const matches = allCenters.filter(v => v.sports.some(s => s.toLowerCase().includes(foundSport)));
+            if (matches.length > 0) {
+                return `For ${foundSport}, I highly recommend ${matches[0].name} in ${matches[0].city} or ${matches[1]?.name || 'checking our list'}. They are currently available for booking!`;
+            }
+            return `I know about ${foundSport}, but I couldn't find a specific center for it in our current list. Try another sport?`;
         }
 
         // --- 💰 Pricing ---
