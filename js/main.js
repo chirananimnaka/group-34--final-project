@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     themeToggle.addEventListener('click', () => {
+        themeToggle.classList.add('animating');
         let theme = document.documentElement.getAttribute('data-theme');
         if (theme === 'light') {
             document.documentElement.removeAttribute('data-theme');
@@ -123,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('theme', 'light');
             themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
         }
+        setTimeout(() => themeToggle.classList.remove('animating'), 300);
     });
 });
 
