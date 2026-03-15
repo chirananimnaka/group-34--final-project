@@ -772,3 +772,8 @@ input:checked + .slider-round:before { transform: translateX(16px); }
 @media (max-width: 650px) {
     .contact-container { grid-template-columns: 1fr !important; gap: 2.5rem; }
 }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
