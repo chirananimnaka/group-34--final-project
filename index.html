@@ -8,6 +8,7 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
     <script src="js/mode-controller.js"></script>
 </head>
 
@@ -100,6 +101,43 @@
                     loading="lazy" 
                     referrerpolicy="no-referrer-when-downgrade">
                 </iframe>
+            </div>
+        </section>
+
+        <!-- APP DOWNLOAD SECTION -->
+        <section id="download-app" style="background: linear-gradient(to bottom, var(--bg-primary), var(--bg-secondary));">
+            <div class="contact-container" style="align-items: center;">
+                <div class="fade-up">
+                    <h2 style="font-size: 3rem; margin-bottom: 1.5rem;">SportSphere <span class="highlight">On Your Phone</span></h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">No need for App Stores. Install our professional sports platform directly to your home screen.</p>
+                    
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="installPWA()" id="install-btn" style="background: #000; border: 1px solid var(--accent-primary);">
+                            <i class="fab fa-android" style="font-size: 1.5rem;"></i>
+                            <div style="text-align: left; line-height: 1.2;">
+                                <small style="display: block; font-size: 0.6rem;">Get it for</small>
+                                <strong>Android APK</strong>
+                            </div>
+                        </button>
+                        
+                        <button class="btn btn-outline" onclick="showIOSManual()" style="border: 1px solid #fff; color: #fff;">
+                            <i class="fab fa-apple" style="font-size: 1.5rem;"></i>
+                            <div style="text-align: left; line-height: 1.2;">
+                                <small style="display: block; font-size: 0.6rem;">Available for</small>
+                                <strong>iOS iPhone</strong>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <div class="fade-up" style="text-align: center;">
+                    <div class="glass" style="padding: 2rem; display: inline-block; position: relative;">
+                        <i class="fas fa-mobile-alt" style="font-size: 10rem; color: var(--accent-primary); opacity: 0.3;"></i>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%;">
+                             <i class="fas fa-basketball-ball" style="font-size: 3rem; color: var(--accent-primary);"></i>
+                             <p style="font-weight: 800; margin-top: 10px;">APP READY</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -516,6 +554,40 @@
             div.innerText = text;
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
+        }
+
+        // --- PWA INSTALLATION LOGIC ---
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Potentially show a custom UI to notify the user they can install the PWA
+        });
+
+        async function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    showToast("✨ Installing SportSphere App...");
+                }
+                deferredPrompt = null;
+            } else {
+                showToast("💡 To install on Android: Open browser menu (⋮) and select 'Install App'");
+            }
+        }
+
+        function showIOSManual() {
+            alert("To Install on iPhone:\n1. Open this in Safari\n2. Tap the 'Share' button (↑)\n3. Scroll down and tap 'Add to Home Screen' (⊞)");
+        }
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('SW Registered!', reg))
+                    .catch(err => console.log('SW Fail!', err));
+            });
         }
     </script>
 </body>
