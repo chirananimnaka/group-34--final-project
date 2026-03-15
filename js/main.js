@@ -230,4 +230,31 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     window.exportData = () => alert("Downloading Revenue Yield Analysis (PDF)...");
+
+    // 5. Intelligent Device Detection & Highlighting
+    const highlightDeviceBtn = () => {
+        const ua = navigator.userAgent.toLowerCase();
+        const andBtn = document.getElementById('and-dl-btn');
+        const iosBtn = document.getElementById('ios-dl-btn');
+        const winBtn = document.getElementById('win-dl-btn');
+
+        if (!andBtn || !iosBtn || !winBtn) return;
+
+        const activeStyle = "background: #0078d4; border: 1px solid #00a2ed; color: white;";
+        const isAndroid = /android/.test(ua);
+        const isIOS     = /iphone|ipad|ipod/.test(ua);
+        const isWindows = /windows/.test(ua);
+
+        if (isAndroid) {
+            andBtn.setAttribute('style', andBtn.getAttribute('style') + activeStyle);
+            andBtn.classList.replace('btn-outline', 'btn-primary');
+        } else if (isIOS) {
+            iosBtn.setAttribute('style', iosBtn.getAttribute('style') + activeStyle);
+            iosBtn.classList.replace('btn-outline', 'btn-primary');
+        } else if (isWindows) {
+            winBtn.setAttribute('style', winBtn.getAttribute('style') + activeStyle);
+            winBtn.classList.replace('btn-outline', 'btn-primary');
+        }
+    };
+    highlightDeviceBtn();
 });
