@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ss-v3';
+const CACHE_NAME = 'ss-v4';
 const ASSETS = [
   'index.html',
   'css/style.css',

@@ -659,7 +659,7 @@ footer { padding: 6rem 10% 2rem; background: var(--bg-primary); border-top: 1px 
     .main-content { margin-left: 80px; }
 }
 @media (max-width: 992px) {
-    .about-grid, .contact-container, .footer-grid { grid-template-columns: 1fr; gap: 4rem; }
+    .about-grid, .footer-grid { grid-template-columns: 1fr; gap: 4rem; }
     .hero h1 { font-size: 4rem; }
     section { padding: 80px 8%; }
     .modal-form-grid { grid-template-columns: 1fr; }
@@ -767,4 +767,8 @@ input:checked + .slider-round:before { transform: translateX(16px); }
     .mode-switch-wrapper .mode-label-online, 
     .mode-switch-wrapper .mode-label-offline { display: none; }
     .mode-switch-wrapper { padding: 8px; }
+}
+
+@media (max-width: 650px) {
+    .contact-container { grid-template-columns: 1fr !important; gap: 2.5rem; }
 }

@@ -17,7 +17,7 @@
     <meta name="apple-mobile-web-app-title" content="SportSphere">
     <link rel="apple-touch-icon" href="favicon.png">
     
-    <!-- v1.0.5-final-order-v01 -->
+    <!-- v1.0.6-contact-layout-v01 -->
 </head>
 
 <body id="home">
@@ -290,7 +290,7 @@
                 <h2>Connect With Support</h2>
                 <p>Institutional grade support for world-class infrastructure.</p>
             </div>
-            <div class="contact-container">
+            <div class="contact-container" style="display: grid; grid-template-columns: 1fr 1.1fr; gap: 2rem; max-width: 1100px; margin: 0 auto; align-items: start;">
                 <div class="contact-info fade-up">
                     <div class="info-item">
                         <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
@@ -306,66 +306,6 @@
                             <p style="color: var(--text-secondary);">+94 11 234 5678</p>
                         </div>
                     </div>
-                    <style>
-           .payment-security {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            opacity: 0.7;
-        }
-
-        /* Mode Toggle Styles */
-        .mode-switch-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 6px 12px;
-            border-radius: 50px;
-            border: 1px solid var(--glass-border);
-            margin-right: 10px;
-        }
-        .mode-switch-wrapper span {
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .mode-label-online { color: #10b981; }
-        .mode-label-offline { color: #f59e0b; }
-        
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 34px;
-            height: 20px;
-        }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider-round {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #10b981;
-            transition: .4s;
-            border-radius: 34px;
-        }
-        .slider-round:before {
-            position: absolute;
-            content: "";
-            height: 14px; width: 14px;
-            left: 3px; bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider-round { background-color: #f59e0b; }
-        input:checked + .slider-round:before { transform: translateX(14px); }
-    </style>            </div>
-                    </div>
                     <div class="info-item">
                         <div class="info-icon"><i class="fas fa-envelope"></i></div>
                         <div>
@@ -374,27 +314,27 @@
                         </div>
                     </div>
                 </div>
-                <div class="glass contact-form fade-up" style="transition-delay: 0.2s;">
+                <div class="glass contact-form fade-up" style="transition-delay: 0.2s; padding: 1.5rem; border-radius: 20px;">
                     <form onsubmit="event.preventDefault(); alert('Message Synchronized Successfully.')">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                            <div class="form-group">
-                                <label>Director Name</label>
-                                <input type="text" placeholder="John Doe" required>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label style="font-size: 0.8rem;">Director Name</label>
+                                <input type="text" placeholder="John Doe" style="padding: 10px; font-size: 0.9rem;" required>
                             </div>
-                            <div class="form-group">
-                                <label>Corporate Email</label>
-                                <input type="email" placeholder="john@arena.com" required>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label style="font-size: 0.8rem;">Corporate Email</label>
+                                <input type="email" placeholder="john@arena.com" style="padding: 10px; font-size: 0.9rem;" required>
                             </div>
                         </div>
                         <div class="form-group" style="margin-bottom: 1rem;">
-                            <label>Subject</label>
-                            <input type="text" placeholder="Infrastructure Inquiry">
+                            <label style="font-size: 0.8rem;">Subject</label>
+                            <input type="text" placeholder="Infrastructure Inquiry" style="padding: 10px; font-size: 0.9rem;">
                         </div>
                         <div class="form-group" style="margin-bottom: 1.5rem;">
-                            <label>Operational Message</label>
-                            <textarea placeholder="Describe your requirement..."></textarea>
+                            <label style="font-size: 0.8rem;">Operational Message</label>
+                            <textarea placeholder="Describe requirement..." style="padding: 10px; font-size: 0.9rem; height: 80px;"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 0.9rem; border-radius: 10px;">Send Message</button>
                     </form>
                 </div>
             </div>
