@@ -412,6 +412,40 @@
         async function saveCenterDetails(event) {
             event.preventDefault();
             const btn = document.getElementById('save-center-btn');
+            
+            const newOpen = document.getElementById('c-open').value;
+            const newClose = document.getElementById('c-close').value;
+            const centerName = document.getElementById('c-name').value;
+
+            // --- CONFLICT DETECTION LOGIC ---
+            // "Customer is King": Center owner cannot close if someone has already booked.
+            const allBookings = JSON.parse(localStorage.getItem('ss_bookings_v4') || '[]');
+            
+            // Filter bookings belonging to this center
+            const myUpcomingBookings = allBookings.filter(b => b.center === centerName);
+
+            const conflictingBookings = myUpcomingBookings.filter(b => {
+                // Time conversion function (HH:mm -> number for comparison)
+                const tToN = (t) => {
+                    if(!t || t === "Close") return 2359;
+                    return parseInt(t.replace(':', ''));
+                };
+
+                const bStart = tToN(b.startTime);
+                const bEnd = tToN(b.endTime);
+                const nOpen = tToN(newOpen);
+                const nClose = tToN(newClose);
+
+                // If booking starts before opening OR ends after closing = CONFLICT
+                return bStart < nOpen || bEnd > nClose;
+            });
+
+            if (conflictingBookings.length > 0) {
+                const bList = conflictingBookings.map(b => `• ${b.date} at ${b.startTime}`).join('\n');
+                alert(`⚠️ ACTION DENIED: CONFLICT DETECTED\n\nYou cannot shorten your hours yet because you have ${conflictingBookings.length} active booking(s) during the times you want to close:\n\n${bList}\n\n"Customer is King" - You must honor these reservations. Please wait until these dates pass or contact the customers.`);
+                return;
+            }
+
             btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Synchronizing...`;
             btn.disabled = true;
 
