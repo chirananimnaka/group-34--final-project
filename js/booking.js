@@ -129,22 +129,57 @@ window.refreshSlots = async function() {
 const CUSTOM_CENTERS_KEY = "ss_custom_centers_v4";
 function loadCustomCenters() {
     const saved = JSON.parse(localStorage.getItem(CUSTOM_CENTERS_KEY) || "[]");
-    saved.forEach(c => {
-        if (!CENTERS.find(existing => existing.id === c.id)) {
-            CENTERS.push(c);
-            if (!CENTER_SLOTS[c.id]) {
-                CENTER_SLOTS[c.id] = TIME_SLOTS.map(t => ({ time: t, taken: false }));
-            }
+    saved.forEach(custom => {
+        // Find if this center already exists by ID or by Name
+        const idx = CENTERS.findIndex(c => c.id === custom.id || c.name.toLowerCase() === custom.name.toLowerCase());
+        
+        if (idx !== -1) {
+            // Replace existing with custom data (Owner overrides system defaults)
+            CENTERS[idx] = { ...CENTERS[idx], ...custom };
+        } else {
+            // New unique center
+            CENTERS.push(custom);
+        }
+
+        // Initialize slots if missing
+        if (!CENTER_SLOTS[custom.id]) {
+            CENTER_SLOTS[custom.id] = TIME_SLOTS.map(t => ({ time: t, taken: false }));
         }
     });
 }
 loadCustomCenters();
 saveSlots();
 
+function getCenterHoursForDate(center, date) {
+    let open = center.openTime || "06:00";
+    let close = center.closeTime || "22:00";
+
+    if (center.customSchedules && Array.isArray(center.customSchedules)) {
+        const exception = center.customSchedules.find(s => {
+            if (s.start && s.end) {
+                return date >= s.start && date <= s.end;
+            }
+            return s.start === date;
+        });
+        if (exception) {
+            open = exception.open;
+            close = exception.close;
+        }
+    }
+    return { open, close };
+}
+
 function isRangeFree(centerId, startIdx, hours) {
     const slots = CENTER_SLOTS[centerId];
+    const center = CENTERS.find(c => String(c.id) === String(centerId));
+    const dateInput = document.getElementById("m-date");
+    const date = dateInput ? dateInput.value : new Date().toISOString().split("T")[0];
+    
+    const { close } = getCenterHoursForDate(center, date);
+
     for (let i = startIdx; i < startIdx + hours; i++) {
         if (i >= TIME_SLOTS.length || slots[i].taken) return false;
+        if (TIME_SLOTS[i] >= close) return false;
     }
     return true;
 }
@@ -248,7 +283,7 @@ window.renderCenters = function() {
         const cSportsList = c.sports || [];
 
         return `
-        <div class="center-card glass fade-up visible" style="opacity:1; transform:none;" onclick="openBookingModal(${c.id})">
+        <div class="center-card glass fade-up visible" style="opacity:1; transform:none;" onclick="openBookingModal('${c.id}')">
             <div class="center-card-img" style="background-image:url('${cImg}')">
                 <span class="avail-tag ${full ? "full" : ""}">${full ? "Fully Booked" : avail + " slots free"}</span>
                 ${indoorBadge}
@@ -266,6 +301,14 @@ window.renderCenters = function() {
                 </div>
                 <div class="center-card-footer">
                     <div>
+                        <div style="font-size: 0.65rem; color: #8b5cf6; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 2px;">
+                            ID: ${(() => {
+                                let raw = String(c.id);
+                                if (raw.startsWith('SS-CTR-')) return raw;
+                                if (raw.startsWith('custom-')) return raw.replace('custom-', 'SS-CTR-');
+                                return 'SS-CTR-' + raw.padStart(6, '0').slice(-6);
+                            })()}
+                        </div>
                         <div class="center-price">Rs. ${(c.price || 0).toLocaleString()} <span>/ hr</span></div>
                         <div class="center-stars">${stars} <small>${c.rating || 'N/A'}</small></div>
                     </div>
@@ -273,7 +316,7 @@ window.renderCenters = function() {
                         <button class="btn btn-outline" style="padding: 9px 12px; font-size: 0.82rem;" title="Locate on Map" onclick="event.stopPropagation(); updateGroundMap('${c.name}')">
                             <i class="fas fa-location-dot" style="margin:0"></i>
                         </button>
-                        <button class="btn btn-primary book-now-btn" onclick="event.stopPropagation(); openBookingModal(${c.id})">
+                        <button class="btn btn-primary book-now-btn" onclick="event.stopPropagation(); openBookingModal('${c.id}')">
                             ${full ? "Waitlist" : "Book"}
                         </button>
                     </div>
@@ -293,7 +336,7 @@ window.renderCenters = function() {
 // BOOKING MODAL
 // ══════════════════════════════════════════
 window.openBookingModal = function(centerId) {
-    selectedCenter   = CENTERS.find(c => c.id === centerId);
+    selectedCenter   = CENTERS.find(c => String(c.id) === String(centerId));
     selectedStartIdx = null;
     selectedHours    = 1;
 
@@ -401,7 +444,14 @@ window.updateSlotGrid = function() {
     if (!grid) return;
     const slots = CENTER_SLOTS[selectedCenter.id];
 
+    const dateInput = document.getElementById("m-date");
+    const date = dateInput ? dateInput.value : new Date().toISOString().split("T")[0];
+    const { open, close } = getCenterHoursForDate(selectedCenter, date);
+
     grid.innerHTML = TIME_SLOTS.map((t, i) => {
+        // Only show slots within center hours for THIS date
+        if (t < open || t >= close) return "";
+
         const isTaken   = slots[i].taken;
         const canStart  = !isTaken && isRangeFree(selectedCenter.id, i, selectedHours);
         const isStart   = selectedStartIdx !== null && i === selectedStartIdx;
@@ -414,8 +464,8 @@ window.updateSlotGrid = function() {
         else if (!canStart) cls += "slot-blocked";
         else                cls += "slot-free";
 
-        const endTime = TIME_SLOTS[i + selectedHours] || "Close";
-        const tooltip = isTaken ? "Already booked" : !canStart ? "Not enough consecutive free slots" : `${t} – ${endTime}`;
+        const nextSlot = TIME_SLOTS[i + 1] || close;
+        const tooltip = isTaken ? "Already booked" : !canStart ? "Invalid time or duration" : `${t} – ${nextSlot}`;
 
         return `
         <button class="${cls}"
@@ -635,10 +685,13 @@ window.finishBooking = async function(booking) {
                 </div>
             </div>
             <div style="display:flex;gap:1rem;margin-top:2rem;justify-content:center;flex-wrap:wrap;">
-                <button class="btn btn-primary" onclick="closeBookingModal();renderMyBookings();showTab('bookings')">
-                    <i class="fas fa-list"></i> View My Bookings
+                <button class="btn btn-primary" onclick="closeBookingModal();renderMyBookings();showTab('bookings')" style="min-width: 160px;">
+                    <i class="fas fa-list"></i> View Bookings
                 </button>
-                <button class="btn btn-outline" onclick="closeBookingModal();renderCenters();">
+                <button class="btn btn-outline" onclick="downloadReceipt('${booking.id}')" style="min-width: 160px; border-color: #ef4444; color: white;">
+                    <i class="fas fa-file-pdf" style="color: #ef4444;"></i> Download Receipt
+                </button>
+                <button class="btn btn-outline" onclick="closeBookingModal();renderCenters();" style="min-width: 160px;">
                     <i class="fas fa-search"></i> Book Another
                 </button>
             </div>
@@ -776,137 +829,208 @@ window.downloadReceipt = function(bookingId) {
     try {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
-
-        // --- Premium Letterhead Header ---
-        doc.setFillColor(5, 7, 10); // Darker background for header
-        doc.rect(0, 0, 210, 50, 'F');
         
-        // Accent bar at top
-        doc.setFillColor(139, 92, 246); // Accent primary
+        // --- Colors ---
+        const primaryColor = [139, 92, 246]; // Indigo/Violet
+        const secondaryColor = [31, 41, 55]; // Gray-800
+        const accentColor = [245, 158, 11]; // Amber
+
+        // --- Document Header ---
+        doc.setFillColor(5, 7, 10);
+        doc.rect(0, 0, 210, 60, 'F');
+        
+        // Indigo accent bar
+        doc.setFillColor(...primaryColor);
         doc.rect(0, 0, 210, 3, 'F');
 
-        // Logo text
+        // Brand Logo
         doc.setTextColor(255, 255, 255);
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(26);
-        doc.text("SPORTSPHERE", 20, 25);
+        doc.setFontSize(28);
+        doc.text("SPORTSPHERE", 20, 30);
         
         doc.setFontSize(10);
         doc.setFont("helvetica", "normal");
-        doc.setTextColor(148, 163, 184); // text-secondary logic
-        doc.text("ELITE SPORTS VENUE NETWORK", 20, 32);
+        doc.setTextColor(156, 163, 175);
+        doc.text("PREMIUM SPORTS VENUE MANAGEMENT", 20, 38);
 
-        // Receipt Label
-        doc.setFillColor(139, 92, 246);
-        doc.rect(140, 18, 50, 12, 'F');
+        // Ribbon Label
+        doc.setFillColor(...primaryColor);
+        doc.rect(140, 22, 55, 12, 'F');
         doc.setTextColor(255, 255, 255);
+        doc.setFontSize(11);
+        doc.setFont("helvetica", "bold");
+        doc.text("OFFICIAL RECEIPT", 167.5, 30, { align: "center" });
+
+        // --- Addresses Section ---
+        let y = 75;
+        doc.setTextColor(...secondaryColor);
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "bold");
+        doc.text("ISSUED BY:", 20, y);
+        
+        y += 7;
+        doc.setFontSize(11);
+        doc.setTextColor(15, 23, 42);
+        doc.text(b.center.toUpperCase(), 20, y);
+        
+        y += 6;
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(71, 85, 105);
+        doc.text(b.location || "Online Booking Service", 20, y);
+        y += 5;
+        doc.text(b.city || "Sri Lanka", 20, y);
+
+        // --- Bill To Section ---
+        y += 12;
+        doc.setTextColor(...secondaryColor);
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "bold");
+        doc.text("BILL TO:", 20, y);
+        
+        y += 7;
+        doc.setFontSize(11);
+        doc.setTextColor(15, 23, 42);
+        doc.text(b.name.toUpperCase(), 20, y);
+        
+        y += 6;
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.setTextColor(71, 85, 105);
+        doc.text(`Phone: ${b.phone}`, 20, y);
+        y += 5;
+        doc.text(`Reference: #${b.id}`, 20, y);
+
+        // --- Receipt Meta Info (Top Right Box) ---
+        const boxY = 75;
+        doc.setFillColor(248, 250, 252);
+        doc.rect(140, boxY, 50, 25, 'F');
+        doc.setDrawColor(226, 232, 240);
+        doc.rect(140, boxY, 50, 25, 'S');
+        
+        doc.setTextColor(71, 85, 105);
+        doc.setFontSize(8);
+        doc.text("BOOKING DATE", 145, boxY + 6);
+        doc.setTextColor(15, 23, 42);
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "bold");
+        doc.text(b.bookedAt.split(',')[0], 145, boxY + 11);
+        
+        doc.setTextColor(71, 85, 105);
+        doc.setFontSize(8);
+        doc.text("PAYMENT STATUS", 145, boxY + 17);
+        const isPaid = (b.status || '').toLowerCase().includes('paid');
+        doc.setTextColor(isPaid ? 16 : 245, isPaid ? 185 : 158, isPaid ? 129 : 11);
+        doc.text(b.status.toUpperCase(), 145, boxY + 22);
+
+        // --- Itemized Table ---
+        y = 145;
+        doc.setFillColor(...secondaryColor);
+        doc.rect(20, y, 170, 10, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(9);
+        doc.setFont("helvetica", "bold");
+        doc.text("DESCRIPTION / SERVICE", 25, y + 6.5);
+        doc.text("SCHEDULE", 85, y + 6.5);
+        doc.text("QTY", 145, y + 6.5);
+        doc.text("TOTAL", 170, y + 6.5);
+
+        y += 18;
+        doc.setTextColor(30, 41, 59);
         doc.setFontSize(10);
         doc.setFont("helvetica", "bold");
-        doc.text("OFFICIAL RECEIPT", 165, 25.5, { align: "center" });
-
-        // --- Info Section ---
-        doc.setTextColor(15, 23, 42); // Dark text
-        doc.setFontSize(9);
+        doc.text(`${b.sport} Court Reservation`, 25, y);
         doc.setFont("helvetica", "normal");
-        doc.text("BILL TO:", 20, 65);
+        doc.setTextColor(71, 85, 105);
+        doc.text(`Target Date: ${b.date}`, 25, y + 6);
+        
+        doc.setTextColor(30, 41, 59);
+        doc.text(`${b.startTime} - ${b.endTime}`, 85, y);
+        doc.text(`${b.hours} hour${b.hours > 1 ? 's' : ''}`, 145, y);
+        
+        doc.setFont("helvetica", "bold");
+        doc.text(`Rs. ${b.total.toLocaleString()}`, 170, y);
+
+        // Line
+        doc.setDrawColor(226, 232, 240);
+        doc.setLineWidth(0.5);
+        doc.line(20, y + 15, 190, y + 15);
+
+        // --- Totals ---
+        y += 28;
+        doc.setTextColor(71, 85, 105);
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text("Subtotal", 140, y);
+        doc.text(`Rs. ${b.total.toLocaleString()}`, 190, y, { align: "right" });
+        
+        y += 8;
+        doc.text("Taxes (0%)", 140, y);
+        doc.text("Rs. 0", 190, y, { align: "right" });
+        
+        y += 12;
+        doc.setFillColor(241, 245, 249);
+        doc.rect(130, y - 6, 60, 12, 'F');
+        doc.setTextColor(...primaryColor);
         doc.setFontSize(12);
         doc.setFont("helvetica", "bold");
-        doc.text(b.name.toUpperCase(), 20, 72);
+        doc.text("TOTAL PAID", 135, y + 2);
+        doc.text(`Rs. ${b.total.toLocaleString()}`, 185, y + 2, { align: "right" });
+
+        // --- Footer Sections ---
+        // --- Official Verified Seal (Code-drawn Red Stamp) ---
+        const sealX = 50;
+        const sealY = y + 15;
+        doc.setDrawColor(220, 38, 38); // Official Stamp Red
+        doc.setLineWidth(1.2);
         
-        doc.setTextColor(100, 100, 100);
+        // Outer distressed circle effect
+        doc.circle(sealX, sealY, 18, 'S');
+        doc.setLineWidth(0.5);
+        doc.circle(sealX, sealY, 16, 'S');
+        
+        // Rotated Stamp Text
+        doc.setTextColor(220, 38, 38);
+        doc.setFontSize(7);
+        doc.setFont("helvetica", "bold");
+        
+        // Draw text along a curve (simulated with rotation)
+        doc.text("VERIFIED BY", sealX, sealY - 4, { align: "center", angle: 15 });
         doc.setFontSize(9);
-        doc.setFont("helvetica", "normal");
-        doc.text(`Email: ${b.userEmail || "Customer"}`, 20, 78);
-        doc.text(`Phone: ${b.phone}`, 20, 83);
-
-        // Date & Ref on right
-        doc.setTextColor(15, 23, 42);
-        doc.text("RECEIPT DETAILS:", 140, 65);
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "bold");
-        doc.text(`No: #${b.id}`, 140, 72);
-        doc.setFont("helvetica", "normal");
-        doc.text(`Issued: ${b.bookedAt}`, 140, 77);
-        doc.text(`Status: ${b.status.toUpperCase()}`, 140, 82);
-
-        // --- Table Headers ---
-        doc.setFillColor(248, 250, 252);
-        doc.rect(20, 95, 170, 10, 'F');
-        doc.setFontSize(9);
-        doc.setFont("helvetica", "bold");
-        doc.setTextColor(51, 65, 85);
-        doc.text("DESCRIPTION", 25, 101.5);
-        doc.text("DETAILS", 70, 101.5);
-        doc.text("DURATION", 135, 101.5);
-        doc.text("SUBTOTAL", 170, 101.5);
-
-        // --- Table Content ---
-        let y = 112;
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "normal");
+        doc.text("SPORTSPHERE", sealX, sealY + 3, { align: "center", angle: 15 });
         
-        const rows = [
-            ["Venue", b.center, "-", ""],
-            ["Sport", b.sport, "-", ""],
-            ["Date", b.date, "-", ""],
-            ["Time Slot", `${b.startTime} - ${b.endTime}`, `${b.hours} hr(s)`, `Rs. ${b.total.toLocaleString()}`]
-        ];
+        // Optional: Add a small "official" star or icon
+        doc.setFontSize(6);
+        doc.text("ORIGINAL DOCUMENT", sealX, sealY + 8, { align: "center", angle: 15 });
 
-        rows.forEach((row, index) => {
-            doc.setTextColor(100, 100, 100);
-            doc.setFont("helvetica", "bold");
-            doc.text(row[0], 25, y);
-            
-            doc.setTextColor(15, 23, 42);
-            doc.setFont("helvetica", "normal");
-            doc.text(row[1], 70, y);
-            doc.text(row[2], 135, y);
-            
-            if (row[3]) {
-                doc.setFont("helvetica", "bold");
-                doc.text(row[3], 170, y);
-            }
-
-            // Draw a subtle line after each row except the last
-            doc.setDrawColor(241, 245, 249);
-            doc.setLineWidth(0.2);
-            doc.line(20, y + 4, 190, y + 4);
-            
-            y += 12;
-        });
-
-        y += 5;
-
-        // --- Grand Total ---
-        doc.setFontSize(14);
-        doc.setFont("helvetica", "bold");
-        doc.text("TOTAL PAID", 120, y);
-        doc.setTextColor(139, 92, 246);
-        doc.setFontSize(18);
-        doc.text(`Rs. ${b.total.toLocaleString()}`, 190, y, { align: "right" });
-
-        // --- Footer Message ---
-        y = 260;
-        doc.setDrawColor(139, 92, 246);
-        doc.setLineWidth(1);
-        doc.line(20, y, 60, y);
-        
-        y += 10;
-        doc.setTextColor(15, 23, 42);
-        doc.setFontSize(10);
-        doc.setFont("helvetica", "bold");
-        doc.text("SportSphere Management", 20, y);
-        
+        // Signature Line
+        doc.setDrawColor(203, 213, 225);
+        doc.line(130, y + 40, 190, y + 40);
         doc.setFontSize(8);
-        doc.setFont("helvetica", "normal");
-        doc.setTextColor(150, 150, 150);
-        doc.text("This receipt is computer generated and valid only upon verification at the sports center.", 105, 285, { align: "center" });
+        doc.setTextColor(71, 85, 105);
+        doc.text("AUTHORIZED SIGNATORY", 143, y + 45);
 
-        doc.save(`SportSphere_Receipt_${b.id}.pdf`);
-        showToast("📄 Professional Receipt downloaded!");
-    } catch (err) {
-        console.error("PDF Generate Error:", err);
-        showToast("❌ Could not generate PDF.");
+        // Terms
+        y = 255;
+        doc.setFontSize(8);
+        doc.setTextColor(148, 163, 184);
+        doc.setFont("helvetica", "bold");
+        doc.text("TERMS & CONDITIONS", 20, y);
+        doc.setFont("helvetica", "normal");
+        doc.text("1. This receipt is only valid for the specified date and time slot.", 20, y + 5);
+        doc.text("2. Cancellations must be made at least 24 hours in advance.", 20, y + 10);
+        doc.text("3. Proper sports attire and shoes are mandatory at the venue.", 20, y + 15);
+        
+        doc.setFont("helvetica", "italic");
+        doc.text("Thank you for choosing SportSphere!", 105, 275, { align: "center" });
+        
+        doc.save(`Receipt_${b.id}.pdf`);
+        showToast("📄 Professional PDF Receipt Downloaded!");
+
+    } catch (e) {
+        console.error("PDF Error:", e);
+        showToast("❌ PDF Generation Failed. Please try again.");
     }
 };
 

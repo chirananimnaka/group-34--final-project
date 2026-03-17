@@ -347,10 +347,12 @@
                     showToast("✅ Welcome Partner (Local)!");
                 }
 
+                const centerId = 'SS-CTR-' + Math.floor(100000 + Math.random() * 900000);
                 localStorage.setItem('center_data', JSON.stringify({ 
                     name: name || email.split('@')[0], 
                     email: email, 
                     type: 'center',
+                    centerId: centerId,
                     loginTime: Date.now() 
                 }));
                 const searchParams = window.location.search;
@@ -370,10 +372,12 @@
                     showToast('Welcome back, Partner!');
                 }
                 const user = auth.currentUser;
+                const centerId = 'SS-CTR-' + Math.floor(100000 + Math.random() * 900000);
                 localStorage.setItem('center_data', JSON.stringify({ 
                     name: user.displayName || 'Arena Owner', 
                     email: user.email, 
                     type: 'center',
+                    centerId: centerId,
                     loginTime: Date.now() 
                 }));
                 const searchParams = window.location.search;
@@ -404,10 +408,12 @@
                 await methods.signInWithPopup(auth, googleProvider);
                 showToast('Success! Redirecting...');
                 const user = auth.currentUser;
+                const centerId = 'SS-CTR-' + Math.floor(100000 + Math.random() * 900000);
                 localStorage.setItem('center_data', JSON.stringify({ 
                     name: user.displayName || 'Arena Partner', 
                     email: user.email, 
                     type: 'center',
+                    centerId: centerId,
                     loginTime: Date.now() 
                 }));
                 const searchParams = window.location.search;

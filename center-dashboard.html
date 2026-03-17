@@ -125,6 +125,81 @@
             .main-content { margin-left: 80px; }
             .center-form-grid { grid-template-columns: 1fr; }
         }
+        /* Conflict Modal Styles */
+        .conflict-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 7, 10, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .conflict-modal-overlay.open {
+            display: flex;
+            opacity: 1;
+        }
+        .conflict-modal-content {
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            width: 90%;
+            max-width: 550px;
+            border-radius: 24px;
+            padding: 2.5rem;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .conflict-modal-overlay.open .conflict-modal-content {
+            transform: translateY(0);
+        }
+        .conflict-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            color: #ef4444;
+        }
+        .conflict-header i {
+            font-size: 2.5rem;
+            animation: pulse-danger 2s infinite;
+        }
+        @keyframes pulse-danger {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .conflict-booking-list {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .conflict-booking-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.9rem;
+        }
+        .conflict-booking-item:last-child { border: none; }
+        .customer-king-badge {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            line-height: 1.5;
+            border-left: 4px solid #f59e0b;
+        }
     </style>
 </head>
 <body>
@@ -276,8 +351,22 @@
                 <div class="glass" style="padding: 2.5rem;">
                     <form id="center-details-form" onsubmit="saveCenterDetails(event)">
                         <div class="center-form-grid">
-                            <div class="form-group">
-                                <label>Center Name (Select or Type New)</label>
+                             <div class="form-group">
+                                <label style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span>Unique Center ID (Auto-Generated)</span>
+                                    <span id="id-lock-badge" style="display: none; font-size: 0.7rem; color: #8b5cf6; background: rgba(139, 92, 246, 0.1); padding: 2px 8px; border-radius: 20px;">
+                                        <i class="fas fa-shield-alt"></i> Secure Link
+                                    </span>
+                                </label>
+                                <input type="text" id="c-id-display" class="modal-input" style="background: rgba(255,255,255,0.05); color: #8b5cf6; font-weight: 800;" readonly placeholder="SS-CTR-XXXXXX">
+                            </div>
+                             <div class="form-group">
+                                <label style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span>Center Name</span>
+                                    <span id="name-lock-badge" style="display: none; font-size: 0.7rem; color: #10b981; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 20px;">
+                                        <i class="fas fa-lock"></i> Locked to Account
+                                    </span>
+                                </label>
                                 <input type="text" id="c-name" class="modal-input" list="center-suggestions" placeholder="Search or Enter Venue Name" required onchange="autoPopulateCenter(this.value)">
                                 <datalist id="center-suggestions">
                                     <!-- Populated via JS -->
@@ -308,6 +397,28 @@
                             <div class="form-group">
                                 <label>Closing Time</label>
                                 <input type="time" id="c-close" class="modal-input" value="22:00">
+                            </div>
+
+                            <!-- Special Schedule Section -->
+                            <div class="form-group" style="grid-column: 1 / -1; margin-top: 1rem; padding: 1.5rem; background: rgba(139, 92, 246, 0.05); border-radius: 16px; border: 1px solid rgba(139, 92, 246, 0.1);">
+                                <h4 style="margin: 0 0 1rem 0; color: #a78bfa; display: flex; align-items: center; gap: 8px;">
+                                    <i class="fas fa-calendar-star"></i> Apply to Specific Date/Range (Optional)
+                                </h4>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem;">
+                                    <div class="form-group">
+                                        <label style="font-size: 0.75rem;">Start Date</label>
+                                        <input type="date" id="c-spec-start" class="modal-input" style="font-size: 0.85rem;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="font-size: 0.75rem;">End Date (Optional)</label>
+                                        <input type="date" id="c-spec-end" class="modal-input" style="font-size: 0.85rem;">
+                                    </div>
+                                    <div style="display: flex; align-items: flex-end; padding-bottom: 5px;">
+                                        <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0;">
+                                            Leave empty for global hours. Select range for holidays/events.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group" style="margin-top: 1.5rem;">
@@ -391,6 +502,14 @@
             }
         }
 
+        function formatCenterId(id) {
+            if (!id) return 'N/A';
+            let raw = String(id);
+            if (raw.startsWith('SS-')) return raw;
+            if (raw.startsWith('custom-')) return raw.replace('custom-', 'SS-CTR-');
+            return 'SS-CTR-' + raw.padStart(6, '0');
+        }
+
         function showTab(tab) {
             console.log("Switching to tab:", tab);
             const tabs = ['overview', 'subscription', 'my-center', 'bookings', 'revenue'];
@@ -442,16 +561,24 @@
             const newOpen = document.getElementById('c-open').value;
             const newClose = document.getElementById('c-close').value;
             const centerName = document.getElementById('c-name').value;
+            const specStart = document.getElementById('c-spec-start').value;
+            const specEnd = document.getElementById('c-spec-end').value;
 
             // --- CONFLICT DETECTION LOGIC ---
-            // "Customer is King": Center owner cannot close if someone has already booked.
             const allBookings = JSON.parse(localStorage.getItem('ss_bookings_v4') || '[]');
-            
-            // Filter bookings belonging to this center
             const myUpcomingBookings = allBookings.filter(b => b.center === centerName);
 
             const conflictingBookings = myUpcomingBookings.filter(b => {
-                // Time conversion function (HH:mm -> number for comparison)
+                // If specStart is set, only check conflicts for those specific dates
+                if (specStart) {
+                    const bDate = b.date;
+                    if (specEnd) {
+                        if (bDate < specStart || bDate > specEnd) return false;
+                    } else {
+                        if (bDate !== specStart) return false;
+                    }
+                }
+
                 const tToN = (t) => {
                     if(!t || t === "Close") return 2359;
                     return parseInt(t.replace(':', ''));
@@ -462,13 +589,11 @@
                 const nOpen = tToN(newOpen);
                 const nClose = tToN(newClose);
 
-                // If booking starts before opening OR ends after closing = CONFLICT
                 return bStart < nOpen || bEnd > nClose;
             });
 
             if (conflictingBookings.length > 0) {
-                const bList = conflictingBookings.map(b => `• ${b.date} at ${b.startTime}`).join('\n');
-                alert(`⚠️ ACTION DENIED: CONFLICT DETECTED\n\nYou cannot shorten your hours yet because you have ${conflictingBookings.length} active booking(s) during the times you want to close:\n\n${bList}\n\n"Customer is King" - You must honor these reservations. Please wait until these dates pass or contact the customers.`);
+                showConflictModal(conflictingBookings);
                 return;
             }
 
@@ -489,8 +614,10 @@
                 }
             }
 
+            const centerUniqueId = document.getElementById('c-id-display').getAttribute('data-raw-id') || document.getElementById('c-id-display').value || 'SS-CTR-' + Math.floor(100000 + Math.random() * 900000);
+
             const details = {
-                id: 'custom-' + Date.now(),
+                id: centerUniqueId,
                 name: document.getElementById('c-name').value,
                 city: document.getElementById('c-city').value,
                 location: document.getElementById('c-location').value,
@@ -502,15 +629,31 @@
                 emoji: "🏟️",
                 rating: 5.0,
                 indoor: true,
-                img: imageUrl
+                img: imageUrl,
+                customSchedules: JSON.parse(localStorage.getItem('center_schedules_' + centerUniqueId) || '[]')
             };
+
+            // If a specific date/range is set, add to exceptions
+            if (specStart) {
+                const newException = {
+                    start: specStart,
+                    end: specEnd || specStart,
+                    open: details.openTime,
+                    close: details.closeTime
+                };
+                // Filter out any existing exceptions that overlap or match the start date
+                details.customSchedules = details.customSchedules.filter(s => s.start !== specStart);
+                details.customSchedules.push(newException);
+                localStorage.setItem('center_schedules_' + centerUniqueId, JSON.stringify(details.customSchedules));
+                showToast("📅 Special schedule applied for " + specStart + (specEnd ? ' to ' + specEnd : ''));
+            }
 
             // 2. Save to Firestore if connected
             if (window.SS_FB && window.SS_FB.auth.app.options.apiKey !== "YOUR_API_KEY") {
                 try {
                     const { db, methods } = window.SS_FB;
                     await methods.addDoc(methods.collection(db, "centers"), details);
-                    showToast('✅ Cloud Sync Successful!');
+                    showToast('✅ Database Updated');
                 } catch (err) {
                     console.error("Firestore Error:", err);
                 }
@@ -520,10 +663,14 @@
             localStorage.setItem('my_center_info', JSON.stringify(details));
             const CUSTOM_CENTERS_KEY = "ss_custom_centers_v4";
             let customCenters = JSON.parse(localStorage.getItem(CUSTOM_CENTERS_KEY) || "[]");
+            
+            // Filter out any old version of this center to prevent duplicates
+            customCenters = customCenters.filter(c => c.id !== details.id && c.name !== details.name);
             customCenters.push(details);
+            
             localStorage.setItem(CUSTOM_CENTERS_KEY, JSON.stringify(customCenters));
 
-            showToast('Local Database Updated!');
+            showToast('📂 Local Storage Updated');
             setTimeout(() => location.reload(), 1500);
         }
 
@@ -541,12 +688,15 @@
             
             const found = allCenters.find(c => c.name.toLowerCase() === name.toLowerCase());
             
-            if (found) {
+             if (found) {
+                document.getElementById('c-id-display').value = found.id;
                 document.getElementById('c-city').value = found.city || 'Colombo';
                 document.getElementById('c-location').value = found.location || '';
                 document.getElementById('c-price').value = found.price || 0;
                 document.getElementById('c-desc').value = found.desc || '';
-                showToast('Found Match! Details Loaded.');
+                
+                // If they just selected a name, we might want to suggest they save to lock it
+                showToast(`Found: ${found.name}. Save details to link this center to your account.`);
             }
         }
 
@@ -569,8 +719,18 @@
             if (centerData.name) {
                 document.getElementById('welcome-msg').innerText = `Welcome, ${centerData.name}`;
             }
+            
+            // Set Initial Center ID if not already saved
+            if (centerData.centerId) {
+                document.getElementById('c-id-display').value = formatCenterId(centerData.centerId);
+                document.getElementById('c-id-display').setAttribute('data-raw-id', centerData.centerId);
+            }
 
             const savedInfo = JSON.parse(localStorage.getItem('my_center_info') || '{}');
+            if (savedInfo.id) {
+                document.getElementById('c-id-display').value = formatCenterId(savedInfo.id);
+                document.getElementById('c-id-display').setAttribute('data-raw-id', savedInfo.id);
+            }
             if (savedInfo.name) {
                 document.getElementById('c-name').value = savedInfo.name;
                 document.getElementById('c-city').value = savedInfo.city;
@@ -580,6 +740,33 @@
                 document.getElementById('c-close').value = savedInfo.closeTime || '22:00';
                 document.getElementById('c-desc').value = savedInfo.desc;
                 
+                // --- CRITICAL ID SYNC CHECK ---
+                // If the saved name matches a predefined center, ensure the ID also matches
+                if (typeof CENTERS !== 'undefined') {
+                    const match = CENTERS.find(c => c.name === savedInfo.name);
+                    if (match && document.getElementById('c-id-display').value !== match.id) {
+                        console.log("Syncing Center ID to match System ID:", match.id);
+                        document.getElementById('c-id-display').value = match.id;
+                    }
+                }
+
+                // --- LOCK NAME & ID FIELD FOR SECURITY ---
+                const nameInput = document.getElementById('c-name');
+                const lockBadge = document.getElementById('name-lock-badge');
+                const idLockBadge = document.getElementById('id-lock-badge');
+
+                if (savedInfo.id && idLockBadge) {
+                    idLockBadge.style.display = 'inline-flex';
+                }
+
+                if (savedInfo.name && savedInfo.name !== 'Arena Owner' && savedInfo.name !== 'Arena Partner') {
+                    nameInput.readOnly = true;
+                    nameInput.style.background = 'rgba(255,255,255,0.03)';
+                    nameInput.style.cursor = 'not-allowed';
+                    nameInput.removeAttribute('list'); // Disable suggestions
+                    if (lockBadge) lockBadge.style.display = 'inline-flex';
+                }
+
                 // Change button text for returning owners
                 const saveBtn = document.getElementById('save-center-btn');
                 if (saveBtn) {
@@ -648,6 +835,7 @@
                 return `
                     <div class="glass" style="padding: 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
                         <div>
+                            <span style="display: block; font-size: 0.65rem; color: #8b5cf6; font-weight: 800; letter-spacing: 1px; margin-bottom: 4px;">ID: ${formatCenterId(b.centerId)}</span>
                             <strong style="display: block;">${b.name}${b.age ? ` (${b.age}y)` : ''}</strong>
                             <span style="font-size: 0.85rem; color: var(--text-secondary);">${b.date} &nbsp;·&nbsp; ${b.startTime} - ${b.endTime}</span>
                         </div>
@@ -755,8 +943,9 @@
             
             doc.setFontSize(10);
             doc.setTextColor(100, 100, 100);
-            doc.text(`Location: ${savedInfo.location || 'N/A'}`, 20, 62);
-            doc.text(`Date Generated: ${new Date().toLocaleString()}`, 20, 67);
+            doc.text(`Center ID: ${formatCenterId(savedInfo.id || 'GENERIC')}`, 20, 62);
+            doc.text(`Location: ${savedInfo.location || 'N/A'}`, 20, 67);
+            doc.text(`Date Generated: ${new Date().toLocaleString()}`, 20, 72);
             
             // Stats Summary
             const total = myBookings.reduce((s, b) => s + b.total, 0);
@@ -1016,6 +1205,63 @@
                 if (!sub) setTimeout(openPaymentModal, 1000);
             }
             renderSubscription();
+        });
+    </script>
+    <!-- Conflict Modal Structure -->
+    <div id="conflict-modal" class="conflict-modal-overlay">
+        <div class="conflict-modal-content">
+            <div class="conflict-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <h2 style="margin:0; font-size: 1.5rem;">Action Denied</h2>
+                    <p style="margin:0; opacity: 0.8; font-size: 0.9rem;">Conflict Detected with Active Bookings</p>
+                </div>
+            </div>
+            
+            <p style="color: var(--text-secondary); line-height: 1.6;">
+                You cannot shorten your operating hours yet because there are <strong id="conflict-count" style="color: white;">X</strong> active reservations during the periods you wish to close:
+            </p>
+
+            <div id="conflict-list" class="conflict-booking-list">
+                <!-- Items injected via JS -->
+            </div>
+
+            <div class="customer-king-badge">
+                <i class="fas fa-crown"></i> "Customer is King" — SportSphere policy requires all existing reservations to be honored. Please adjust your hours after these dates pass or coordinate with customers directly.
+            </div>
+
+            <button class="btn btn-primary" onclick="hideConflictModal()" style="width: 100%; margin-top: 2rem; height: 50px;">
+                I Understand
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function showConflictModal(bookings) {
+            const modal = document.getElementById('conflict-modal');
+            const list = document.getElementById('conflict-list');
+            const count = document.getElementById('conflict-count');
+            
+            count.innerText = bookings.length;
+            list.innerHTML = bookings.map(b => `
+                <div class="conflict-booking-item">
+                    <span><i class="far fa-calendar-alt"></i> ${b.date}</span>
+                    <strong style="color: #8b5cf6;"><i class="far fa-clock"></i> ${b.startTime}</strong>
+                </div>
+            `).join('');
+            
+            modal.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideConflictModal() {
+            document.getElementById('conflict-modal').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        // Close on overlay click
+        document.getElementById('conflict-modal').addEventListener('click', function(e) {
+            if (e.target === this) hideConflictModal();
         });
     </script>
 </body>
