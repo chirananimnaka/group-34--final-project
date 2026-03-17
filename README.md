@@ -32,18 +32,20 @@ SportSphere is designed to live where you play:
 
 ### 3. Professional Dashboards
 - **User Portal**: Personalized space to track active reservations, health metrics, and "Match Day Memories."
-- **Center Portal**: High-level owner interface featuring:
+- **Center Portal (Enterprise v5)**: High-level owner interface featuring:
+  - **Dynamic Operating Hours**: Global time settings synchronized with the customer booking grid.
+  - **Special Date Exceptions**: Set custom schedules for specific dates or ranges (holidays/maintenance).
+  - **Conflict Detection Engine**: Premium modals prevent hour changes that clash with active bookings.
   - **Revenue Analytics**: Real-time line graphs for weekly yield tracking.
-  - **Utilization Stats**: Intelligent occupancy monitoring.
-  - **Operational Control**: System lockdown protocols and rapid booking overrides.
+  - **Security Lockdown**: Automatic field-locking for Venue ID and Name to enforce secure data ownership.
 
 ### 4. AI Smart Assistant (SSB Engine)
 - **On-Page Intelligence**: The SportSphere Brain (SSB) provides instant support for venue queries and sports-related logic.
 - **Multilingual**: Intelligent processing for both English and Sinhala queries.
 
 ### 5. Institutional Documentation
-- **Pro Receipts**: Automatic generation of professional, branded PDF receipts for all transactions.
-- **Health Reports**: Major PDF reports for progression tracking.
+- **Corporate Receipt Engine**: Automated generation of branded PDF receipts featuring an **Official Verified Seal** (Code-drawn), structured billing sections, and formal policy footers.
+- **Health Reports**: Major PDF reports for progression tracking using biometric snapshots.
 
 ---
 
