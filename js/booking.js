@@ -747,7 +747,7 @@ window.renderMyBookings = function() {
         <div class="booking-item glass fade-up visible" id="bi-${b.id}" style="padding: 18px 25px; margin-bottom: 15px; display: block; opacity: 1; transform: none;">
             <div class="booking-item-info">
                 <h4 style="font-size: 1.6rem; margin-bottom: 12px; display: flex; align-items: center; gap: 15px;">
-                    <span style="font-size: 2.5rem; background: rgba(255,255,255,0.05); width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 14px;">${b.emoji || '🏟️'}</span>
+                    <span style="font-size: 2.5rem; background: var(--glass-bg); width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 14px;">${b.emoji || '🏟️'}</span>
                     ${b.center || 'Sports Center'}
                 </h4>
                 <p style="font-size: 0.95rem; margin-bottom: 15px;">
@@ -755,10 +755,10 @@ window.renderMyBookings = function() {
                     <i class="fas fa-trophy"></i> ${b.sport || 'Sports'} &nbsp;·&nbsp;
                     <i class="fas fa-calendar"></i> ${b.date || 'Today'}
                 </p>
-                <div style="margin-top:0.8rem; font-size: 0.9rem; color: var(--text-secondary); background: rgba(255,255,255,0.03); padding: 12px 18px; border-radius: 12px; display: inline-flex; gap: 15px; flex-wrap: wrap;">
+                <div style="margin-top:0.8rem; font-size: 0.9rem; color: var(--text-secondary); background: var(--glass-bg); padding: 12px 18px; border-radius: 12px; display: inline-flex; gap: 15px; flex-wrap: wrap;">
                     <span><i class="fas fa-clock" style="color: var(--accent-primary);"></i> ${b.startTime || '--:--'} – ${b.endTime || '--:--'}</span>
                     <span><i class="fas fa-user" style="color: var(--accent-primary);"></i> ${b.name || 'User'}</span>
-                    <strong style="color: white;"><i class="fas fa-tag" style="color: var(--accent-primary);"></i> Rs. ${bTotal.toLocaleString()}</strong>
+                    <strong style="color: var(--text-primary);"><i class="fas fa-tag" style="color: var(--accent-primary);"></i> Rs. ${bTotal.toLocaleString()}</strong>
                 </div>
                 
                 <!-- Rating UI -->
@@ -778,7 +778,7 @@ window.renderMyBookings = function() {
                     <span class="booking-status-badge" style="padding: 6px 15px; font-size: 0.8rem; background: ${isPaid ? 'rgba(34,197,94,0.15)' : 'rgba(251,146,60,0.15)'}; color: ${isPaid ? '#22c55e' : '#fbbf24'}; border-color: ${isPaid ? 'rgba(34,197,94,0.3)' : 'rgba(251,146,60,0.3)'}">
                         ${isPaid ? '✓' : '🕒'} ${bStatus}
                     </span>
-                    <button class="btn btn-outline" style="padding: 8px 18px; font-size: 0.85rem; border-color: var(--accent-primary); color: white;" onclick="downloadReceipt('${b.id}')">
+                    <button class="btn btn-outline" style="padding: 8px 18px; font-size: 0.85rem; border-color: var(--accent-primary); color: var(--text-primary);" onclick="downloadReceipt('${b.id}')">
                         <i class="fas fa-file-pdf" style="color: #ef4444; margin-right: 8px;"></i> Download Receipt (PDF)
                     </button>
                 </div>
