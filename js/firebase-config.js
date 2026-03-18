@@ -29,7 +29,7 @@ if (typeof localStorage !== 'undefined' && localStorage.getItem('ss_system_mode'
 // We use the modular SDK from CDN for easy deployment on GitHub Pages
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, doc, setDoc, query, where, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, doc, setDoc, query, where, onSnapshot, deleteDoc, updateDoc, arrayUnion, arrayRemove, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
 
 const firebaseConfig = {
@@ -67,6 +67,11 @@ window.SS_FB = {
         where,
         onSnapshot,
         deleteDoc,
+        updateDoc,
+        arrayUnion,
+        arrayRemove,
+        serverTimestamp,
+        increment,
         ref,
         uploadBytes,
         getDownloadURL,

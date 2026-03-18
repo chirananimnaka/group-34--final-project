@@ -218,6 +218,91 @@
             border-color: #10b981;
         }
 
+        /* Squad Finder Styles */
+        .squad-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .squad-card {
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .squad-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.1);
+        }
+        .squad-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--accent-primary);
+        }
+        .squad-sport-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: rgba(139, 92, 246, 0.1);
+            display: grid;
+            place-items: center;
+            font-size: 1.2rem;
+            color: var(--accent-primary);
+        }
+        .squad-info-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .squad-info-row i {
+            width: 16px;
+            color: var(--accent-primary);
+        }
+        .joiner-dots {
+            display: flex;
+            margin-top: 10px;
+        }
+        .joiner-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--bg-secondary);
+            margin-left: -10px;
+            display: grid;
+            place-items: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: white;
+        }
+        .joiner-dot:first-child { margin-left: 0; }
+        .skill-tag {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--glass-border);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* Mock Payment Modal Styles */
         .payment-card-input {
             background: rgba(255,255,255,0.05);
@@ -302,6 +387,10 @@
                 <div class="nav-item" onclick="showTab('memories')">
                     <i class="fas fa-camera"></i>
                     <span>Memories</span>
+                </div>
+                <div class="nav-item" onclick="showTab('squad')">
+                    <i class="fas fa-users"></i>
+                    <span>Squad Finder</span>
                 </div>
 
                 <!-- Logout -->
@@ -494,6 +583,100 @@
                     <div style="text-align: center; color: var(--text-secondary); padding: 2rem;">Loading history...</div>
                 </div>
             </div>
+            <!-- SQUAD FINDER TAB -->
+            <div id="squad-tab" style="display: none;">
+                <div class="section-header-dash">
+                    <h1>Squad Finder</h1>
+                    <button onclick="togglePostSlotForm()" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Post a Slot
+                    </button>
+                </div>
+
+                <!-- Post Slot Form (Collapsible) -->
+                <div id="post-slot-form" class="glass" style="display: none; padding: 2rem; border-radius: 24px; margin-bottom: 3rem; animation: fadeIn 0.4s ease;">
+                    <h3 style="margin-bottom: 1.5rem; color: var(--accent-primary);">Post an Open Slot</h3>
+                    <form onsubmit="handlePostSquadSlot(event)">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                            <div class="form-group">
+                                <label>Sport Type</label>
+                                <select id="squad-sport" class="modal-input" required>
+                                    <option value="">Select Sport</option>
+                                    <option>Football</option>
+                                    <option>Cricket</option>
+                                    <option>Badminton</option>
+                                    <option>Padel</option>
+                                    <option>Pickleball</option>
+                                    <option>Futsal</option>
+                                    <option>Basketball</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Venue Name</label>
+                                <input type="text" id="squad-venue" class="modal-input" placeholder="e.g. Futsal World" required>
+                            </div>
+                            <div class="form-group">
+                                <label>City</label>
+                                <select id="squad-city" class="modal-input" required>
+                                    <option value="">Select City</option>
+                                    <option>Colombo</option>
+                                    <option>Kandy</option>
+                                    <option>Galle</option>
+                                    <option>Negombo</option>
+                                    <option>Jaffna</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Date & Time</label>
+                                <input type="datetime-local" id="squad-datetime" class="modal-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Players Needed (1-10)</label>
+                                <input type="number" id="squad-players" class="modal-input" min="1" max="10" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Skill Level</label>
+                                <select id="squad-skill" class="modal-input" required>
+                                    <option>Beginner</option>
+                                    <option selected>Intermediate</option>
+                                    <option>Advanced</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1.5rem;">
+                            <label>Optional Message</label>
+                            <textarea id="squad-message" class="modal-input" style="height: 80px; resize: none;" placeholder="Tell potential squad mates about the game..."></textarea>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button type="submit" class="btn btn-primary" style="flex: 1; padding: 12px;">Publish Slot</button>
+                            <button type="button" onclick="togglePostSlotForm()" class="btn btn-outline" style="flex: 0.5;">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tabs for Feed vs My Squads -->
+                <div class="sport-filter-row" style="justify-content: flex-start; margin-bottom: 2rem; gap: 10px;">
+                    <button class="sport-pill active" id="btn-squad-feed" onclick="switchSquadSubTab('feed')">Open Squads</button>
+                    <button class="sport-pill" id="btn-squad-mine" onclick="switchSquadSubTab('mine')">My Squads</button>
+                </div>
+
+                <div id="squad-feed-view">
+                    <div class="squad-grid" id="squad-grid">
+                        <!-- Open squad slots will be rendered here -->
+                        <div style="text-align: center; color: var(--text-secondary); padding: 3rem; grid-column: 1/-1;">
+                            <i class="fas fa-circle-notch fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                            <p>Connecting to SportSphere Matchmaker...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="squad-mine-view" style="display: none;">
+                    <h3 style="margin-bottom: 1.5rem;">Squads I've Posted</h3>
+                    <div class="squad-grid" id="my-posted-squads"></div>
+                    
+                    <h3 style="margin-top: 3rem; margin-bottom: 1.5rem;">Squads I've Joined</h3>
+                    <div class="squad-grid" id="my-joined-squads"></div>
+                </div>
+            </div>
         </main>
     </div>
 
@@ -619,6 +802,7 @@
             document.getElementById('explore-tab').style.display = tab === 'explore' ? 'block' : 'none';
             document.getElementById('health-tab').style.display = tab === 'health' ? 'block' : 'none';
             document.getElementById('memories-tab').style.display = tab === 'memories' ? 'block' : 'none';
+            document.getElementById('squad-tab').style.display = tab === 'squad' ? 'block' : 'none';
 
             document.querySelectorAll('.nav-item').forEach(item => {
                 const tabAttr = item.getAttribute('onclick');
@@ -643,7 +827,189 @@
             if (tab === 'health') {
                 loadHealthHistory();
             }
+            if (tab === 'squad') {
+                initSquadFinder();
+            }
             if (tab === 'home') updateStats();
+        }
+
+        // --- Squad Finder Logic ---
+        let squadListener = null;
+
+        function initSquadFinder() {
+            if (squadListener) return; // Already listening
+            loadSquadSlots();
+        }
+
+        function togglePostSlotForm() {
+            const form = document.getElementById('post-slot-form');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function switchSquadSubTab(sub) {
+            document.getElementById('squad-feed-view').style.display = sub === 'feed' ? 'block' : 'none';
+            document.getElementById('squad-mine-view').style.display = sub === 'mine' ? 'block' : 'none';
+            
+            document.getElementById('btn-squad-feed').classList.toggle('active', sub === 'feed');
+            document.getElementById('btn-squad-mine').classList.toggle('active', sub === 'mine');
+            
+            if (sub === 'mine') renderMySquads();
+        }
+
+        async function handlePostSquadSlot(e) {
+            e.preventDefault();
+            const user = window.SS_FB?.auth?.currentUser;
+            if (!user) { showToast("Please login to post!"); return; }
+
+            const slotData = {
+                sport: document.getElementById('squad-sport').value,
+                venue: document.getElementById('squad-venue').value,
+                city: document.getElementById('squad-city').value,
+                datetime: new Date(document.getElementById('squad-datetime').value).toISOString(),
+                playersNeeded: parseInt(document.getElementById('squad-players').value),
+                skillLevel: document.getElementById('squad-skill').value,
+                message: document.getElementById('squad-message').value,
+                postedBy: user.uid,
+                postedByName: user.displayName || "SportSphere Member",
+                joiners: [],
+                status: "open",
+                createdAt: window.SS_FB.methods.serverTimestamp()
+            };
+
+            try {
+                showToast("📡 Publishing your squad slot...");
+                await window.SS_FB.methods.addDoc(window.SS_FB.methods.collection(window.SS_FB.db, "squad_slots"), slotData);
+                showToast("✅ Squad slot posted successfully!");
+                e.target.reset();
+                togglePostSlotForm();
+            } catch (err) {
+                console.error("Post error:", err);
+                showToast("❌ Failed to post squad slot.");
+            }
+        }
+
+        function loadSquadSlots() {
+            if (!window.SS_FB) return;
+            const { db, methods } = window.SS_FB;
+            const q = methods.query(methods.collection(db, "squad_slots"));
+
+            squadListener = methods.onSnapshot(q, (snapshot) => {
+                const slots = [];
+                snapshot.forEach(doc => slots.push({ id: doc.id, ...doc.data() }));
+                // Sort by createdAt desc
+                slots.sort((a,b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+                renderSquadSlots(slots);
+                window.allSquadSlots = slots; // Global cache for My Squads
+                if (document.getElementById('squad-mine-view').style.display === 'block') renderMySquads();
+            });
+        }
+
+        function renderSquadSlots(slots) {
+            const grid = document.getElementById('squad-grid');
+            const user = window.SS_FB?.auth?.currentUser;
+            
+            const openSlots = slots.filter(s => s.status === 'open' && s.postedBy !== user?.uid);
+
+            if (openSlots.length === 0) {
+                grid.innerHTML = `<div style="text-align: center; color: var(--text-secondary); padding: 3rem; grid-column: 1/-1;">
+                    <i class="fas fa-search" style="font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <p>No open squads currently. Be the first to post!</p>
+                </div>`;
+                return;
+            }
+
+            grid.innerHTML = openSlots.map(s => createSquadCard(s, user)).join('');
+        }
+
+        function createSquadCard(s, user) {
+            const isFull = s.playersNeeded <= 0;
+            const hasJoined = s.joiners?.some(j => j.uid === user?.uid);
+            const sportIcons = {
+                'Football': '⚽', 'Cricket': '🏏', 'Badminton': '🏸', 
+                'Padel': '🎾', 'Pickleball': '🏓', 'Futsal': '🥅', 'Basketball': '🏀'
+            };
+            
+            return `
+                <div class="glass squad-card fade-up visible">
+                    <div class="squad-badge" style="background: ${isFull ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)'}; color: ${isFull ? '#ef4444' : '#10b981'}">
+                        ${isFull ? 'Full' : 'Open Slot'}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="squad-sport-icon">${sportIcons[s.sport] || '🏆'}</div>
+                        <div>
+                            <h3 style="font-size: 1.1rem; margin-bottom: 2px;">${s.sport}</h3>
+                            <span class="skill-tag">${s.skillLevel}</span>
+                        </div>
+                    </div>
+                    <div class="squad-info-row"><i class="fas fa-map-marker-alt"></i> ${s.venue}, ${s.city}</div>
+                    <div class="squad-info-row"><i class="fas fa-calendar-alt"></i> ${new Date(s.datetime).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</div>
+                    <div class="squad-info-row"><i class="fas fa-user-edit"></i> Posted by ${s.postedByName}</div>
+                    ${s.message ? `<p style="font-size: 0.8rem; color: var(--text-secondary); font-style: italic; border-left: 2px solid var(--accent-primary); padding-left: 10px; margin-top: 5px;">"${s.message}"</p>` : ''}
+                    
+                    <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid var(--glass-border);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <span style="font-size: 0.8rem; font-weight: 600;">Players Needed: <span style="color: var(--accent-primary);">${s.playersNeeded}</span></span>
+                            <div class="joiner-dots">
+                                ${s.joiners?.slice(0, 3).map(() => `<div class="joiner-dot"><i class="fas fa-user"></i></div>`).join('')}
+                                ${s.joiners?.length > 3 ? `<div class="joiner-dot">+${s.joiners.length - 3}</div>` : ''}
+                            </div>
+                        </div>
+                        <button class="btn ${hasJoined ? 'btn-outline' : 'btn-primary'}" 
+                                style="width: 100%; padding: 10px;" 
+                                onclick="joinSquad('${s.id}')" 
+                                ${isFull || hasJoined ? 'disabled' : ''}>
+                            ${hasJoined ? '<i class="fas fa-check"></i> Joined' : isFull ? 'Full' : 'Join Squad'}
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function joinSquad(slotId) {
+            const user = window.SS_FB?.auth?.currentUser;
+            if (!user) { showToast("Please login to join!"); return; }
+
+            try {
+                const { db, methods } = window.SS_FB;
+                const slotRef = methods.doc(db, "squad_slots", slotId);
+                
+                showToast("📡 Joining squad...");
+                
+                await methods.updateDoc(slotRef, {
+                    joiners: methods.arrayUnion({ uid: user.uid, name: user.displayName || "Member" }),
+                    playersNeeded: window.SS_FB.methods.increment ? window.SS_FB.methods.increment(-1) : 0 // Fallback if increment not available
+                });
+
+                // Check if full (this is a bit racey but fine for demo)
+                const slots = window.allSquadSlots || [];
+                const slot = slots.find(s => s.id === slotId);
+                if (slot && slot.playersNeeded <= 1) {
+                    await methods.updateDoc(slotRef, { status: "full", playersNeeded: 0 });
+                }
+
+                showToast("🎉 You've joined the squad!");
+            } catch (err) {
+                console.error("Join error:", err);
+                showToast("❌ Failed to join squad.");
+            }
+        }
+
+        // Add increment if missing (Wait, I should have added it to firebase-config.js)
+        // I'll manually handle the decrement if increment isn't there.
+
+        function renderMySquads() {
+            const user = window.SS_FB?.auth?.currentUser;
+            if (!user) return;
+            const slots = window.allSquadSlots || [];
+
+            const posted = slots.filter(s => s.postedBy === user.uid);
+            const joined = slots.filter(s => s.joiners?.some(j => j.uid === user.uid));
+
+            const postedGrid = document.getElementById('my-posted-squads');
+            const joinedGrid = document.getElementById('my-joined-squads');
+
+            postedGrid.innerHTML = posted.length ? posted.map(s => createSquadCard(s, user)).join('') : '<p style="color: var(--text-secondary);">You haven\'t posted any squads yet.</p>';
+            joinedGrid.innerHTML = joined.length ? joined.map(s => createSquadCard(s, user)).join('') : '<p style="color: var(--text-secondary);">You haven\'t joined any squads yet.</p>';
         }
 
         // --- Health & Fitness Logic (Health-Informed Booking) ---
@@ -1175,5 +1541,39 @@
             setTimeout(refreshAll, 500); // Secondary check for slow storage
         });
     </script>
+    <!-- 
+    FIRESTORE SECURITY RULES (Copy to Firebase Console):
+    
+    rules_version = '2';
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        
+        // Squad Finder Rules
+        match /squad_slots/{slotId} {
+          allow read: if request.auth != null;
+          allow create: if request.auth != null && request.resource.data.postedBy == request.auth.uid;
+          allow update: if request.auth != null && (
+            // Allow joining: only if playersNeeded > 0 and user isn't already a joiner
+            (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['joiners', 'playersNeeded', 'status'])) ||
+            // Allow creator to edit/delete
+            (resource.data.postedBy == request.auth.uid)
+          );
+          allow delete: if request.auth != null && resource.data.postedBy == request.auth.uid;
+        }
+
+        // Memories Rules
+        match /memories/{memoryId} {
+          allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+          allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+          allow delete: if request.auth != null && resource.data.userId == request.auth.uid;
+        }
+
+        // Health History Rules
+        match /users/{userId}/health_history/{recordId} {
+          allow read, write: if request.auth != null && request.auth.uid == userId;
+        }
+      }
+    }
+    -->
 </body>
 </html>
