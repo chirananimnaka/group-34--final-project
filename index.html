@@ -4,7 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SportSphere | Book Your Game</title>
+    <title>SportSphere | Book Your Game | Sports Grounds in Sri Lanka</title>
+    <meta name="description" content="Book world-class sports courts across Sri Lanka with SportSphere. Instant confirmation for Cricket, Football, Badminton, and more. Manage your arena with our elite pro tools.">
+    <meta name="keywords" content="sports grounds, book courts, Sri Lanka, cricket grounds, football grounds, badminton courts, sports management, SportSphere">
+    <link rel="canonical" href="https://sportsphere.biz/">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sportsphere.biz/">
+    <meta property="og:title" content="SportSphere | Book Your Game">
+    <meta property="og:description" content="Book world-class sports courts across Sri Lanka. Instant confirmation, zero hassle.">
+    <meta property="og:image" content="https://sportsphere.biz/assets/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://sportsphere.biz/">
+    <meta property="twitter:title" content="SportSphere | Book Your Game">
+    <meta property="twitter:description" content="Book world-class sports courts across Sri Lanka. Instant confirmation, zero hassle.">
+    <meta property="twitter:image" content="https://sportsphere.biz/assets/og-image.png">
+
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -16,6 +34,31 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SportSphere">
     <link rel="apple-touch-icon" href="favicon.png">
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SportsActivityLocation",
+      "name": "SportSphere",
+      "url": "https://sportsphere.biz",
+      "logo": "https://sportsphere.biz/favicon.png",
+      "description": "Premium sports booking platform in Sri Lanka.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Elite Tower, Level 42",
+        "addressLocality": "Colombo",
+        "postalCode": "00100",
+        "addressCountry": "LK"
+      },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+94-11-234-5678",
+        "contactType": "customer service",
+        "email": "info@sportsphere.biz"
+      }
+    }
+    </script>
     
     <!-- v1.1.5-device-detect-v01 -->
 </head>
@@ -305,29 +348,35 @@
                         <div class="info-icon"><i class="fas fa-envelope"></i></div>
                         <div>
                             <h4>Inquiries</h4>
-                            <p style="color: var(--text-secondary);">intel@sportsphere.elite</p>
+                            <p style="color: var(--text-secondary);">info@sportsphere.biz</p>
                         </div>
                     </div>
                 </div>
                 <div class="glass contact-form fade-up" style="transition-delay: 0.2s; padding: 1.5rem; border-radius: 20px;">
-                    <form onsubmit="event.preventDefault(); alert('Message Synchronized Successfully.')">
+                    <form action="https://formsubmit.co/info@sportsphere.biz" method="POST">
+                        <!-- Custom settings for FormSubmit -->
+                        <input type="hidden" name="_subject" value="New Inquiry from SportSphere Website">
+                        <input type="hidden" name="_next" value="https://sportsphere.biz/thanks.html">
+                        <input type="hidden" name="_template" value="table">
+                        <input type="hidden" name="_captcha" value="false">
+
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label style="font-size: 0.8rem;">Director Name</label>
-                                <input type="text" placeholder="John Doe" style="padding: 10px; font-size: 0.9rem;" required>
+                                <input type="text" name="name" placeholder="John Doe" style="padding: 10px; font-size: 0.9rem;" required>
                             </div>
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label style="font-size: 0.8rem;">Corporate Email</label>
-                                <input type="email" placeholder="john@arena.com" style="padding: 10px; font-size: 0.9rem;" required>
+                                <input type="email" name="email" placeholder="john@arena.com" style="padding: 10px; font-size: 0.9rem;" required>
                             </div>
                         </div>
                         <div class="form-group" style="margin-bottom: 1rem;">
                             <label style="font-size: 0.8rem;">Subject</label>
-                            <input type="text" placeholder="Infrastructure Inquiry" style="padding: 10px; font-size: 0.9rem;">
+                            <input type="text" name="subject" placeholder="Infrastructure Inquiry" style="padding: 10px; font-size: 0.9rem;">
                         </div>
                         <div class="form-group" style="margin-bottom: 1.5rem;">
                             <label style="font-size: 0.8rem;">Operational Message</label>
-                            <textarea placeholder="Describe requirement..." style="padding: 10px; font-size: 0.9rem; height: 80px;"></textarea>
+                            <textarea name="message" placeholder="Describe requirement..." style="padding: 10px; font-size: 0.9rem; height: 80px;" required></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 0.9rem; border-radius: 10px;">Send Message</button>
                     </form>
