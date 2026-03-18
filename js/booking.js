@@ -543,7 +543,8 @@ window.confirmBooking = async function() {
         pricePerHour: selectedCenter.price,
         total,
         status:       "Confirmed",
-        bookedAt:     new Date().toLocaleString()
+        bookedAt:     new Date().toLocaleString(),
+        bookedAtTimestamp: Date.now()
     };
 
     // Instead of saving directly, open payment modal
@@ -782,18 +783,61 @@ window.renderMyBookings = function() {
                     </button>
                 </div>
             </div>
-            <button class="cancel-booking-btn" onclick="cancelBooking('${b.id}')" style="padding: 10px 20px; font-size: 0.85rem;">
-                <i class="fas fa-times"></i> Cancel
-            </button>
+            ${(() => {
+                const now = Date.now();
+                const bookedAt = b.bookedAtTimestamp || 0;
+                const hoursSinceBooking = (now - bookedAt) / (1000 * 60 * 60);
+                const canCancel = hoursSinceBooking < 24;
+
+                if (canCancel) {
+                    return `
+                        <button class="cancel-booking-btn" onclick="cancelBooking('${b.id}')" 
+                                style="margin-left: auto; padding: 10px 22px; font-size: 0.85rem; border: 1.5px solid #ef4444; color: #ef4444; background: rgba(239,68,68,0.08); border-radius: 99px; transition: all 0.3s ease;"
+                                onmouseover="this.style.background='rgba(239,68,68,0.2)'; this.style.transform='scale(1.02)';"
+                                onmouseout="this.style.background='rgba(239,68,68,0.08)'; this.style.transform='scale(1)';">
+                            <i class="fas fa-times-circle"></i> Cancel and Refund
+                        </button>
+                    `;
+                } else {
+                    return `
+                        <div style="width: fit-content; margin-left: auto; color: #ef4444; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; border: 1px solid rgba(239,68,68,0.3); padding: 10px 18px; border-radius: 99px; background: rgba(239,68,68,0.08); cursor: not-allowed; display: flex; align-items: center; gap: 6px;" title="Cancellations are only permitted within 24 hours of booking.">
+                             <i class="fas fa-ban"></i> Non-Refundable
+                        </div>
+                    `;
+                }
+            })()}
         </div>`}).join("");
 };
 
 window.cancelBooking = async function(id) {
-    if (!confirm("Are you sure you want to cancel this booking?")) return;
+    const booking = myBookings.find(b => b.id === id);
+    if (!booking) return;
+
+    const now = Date.now();
+    const bookedAt = booking.bookedAtTimestamp || 0;
+    const hoursSinceBooking = (now - bookedAt) / (1000 * 60 * 60);
+
+    if (hoursSinceBooking >= 24) {
+        showToast("❌ Cancellation expired! (24-hour limit exceeded)");
+        return;
+    }
+
+    const isPaid = (booking.status || '').includes('Paid');
+    const msg = isPaid 
+        ? "This booking is PAID. Would you like to cancel and request a refund to your original payment method? (Within 24hr window)"
+        : "Are you sure you want to cancel this booking?";
+
+    if (!confirm(msg)) return;
+    
     myBookings = myBookings.filter(b => b.id !== id);
     await saveBookings(myBookings);
     renderMyBookings();
-    showToast("Booking cancelled.");
+    
+    if (isPaid) {
+        showToast("✅ Refund Processing: Rs. " + booking.total.toLocaleString() + " will be returned to your card.");
+    } else {
+        showToast("✅ Booking cancelled successfully.");
+    }
 };
 
 // ══════════════════════════════════════════
