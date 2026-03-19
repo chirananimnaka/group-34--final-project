@@ -298,6 +298,351 @@
             border: 1px solid var(--glass-border);
         }
 
+        /* Group Chat Styles */
+        .chat-room-card {
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            position: relative;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            cursor: pointer;
+        }
+        .chat-room-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-5px);
+            background: rgba(139, 92, 246, 0.05);
+        }
+        .member-count-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            background: rgba(139, 92, 246, 0.2);
+            color: var(--accent-primary);
+        }
+        .unread-badge {
+            background: #ef4444;
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 8px;
+            display: none;
+        }
+        .chat-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 15, 29, 0.95);
+            backdrop-filter: blur(15px);
+            z-index: 2000;
+            display: none;
+            justify-content: flex-end; /* Slide in from right */
+        }
+        .chat-container {
+            width: 100%;
+            max-width: 500px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--glass-border);
+            animation: chatSlideRight 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        @keyframes chatSlideRight {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        .chat-header {
+            padding: 1.5rem;
+            background: rgba(139, 92, 246, 0.1);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            background: rgba(255, 255, 255, 0.01);
+            scroll-behavior: smooth;
+        }
+        .msg-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .msg-sender-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .msg-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .msg-sender-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+        .msg-bubble {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .msg-bubble.received {
+            align-self: flex-start;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-top-left-radius: 4px;
+        }
+        .msg-bubble.sent {
+            align-self: flex-end;
+            background: var(--accent-primary);
+            color: white;
+            border-top-right-radius: 4px;
+        }
+        .msg-timestamp {
+            font-size: 0.65rem;
+            opacity: 0.5;
+            margin-top: 4px;
+        }
+        .msg-bubble.sent .msg-timestamp { text-align: right; }
+        
+        .chat-input-area {
+            padding: 1.2rem;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 12px;
+            background: var(--bg-secondary);
+        }
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px 15px;
+            color: white;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .chat-input:focus { border-color: var(--accent-primary); background: rgba(255,255,255,0.08); }
+
+        .typing-indicator {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            padding: 5px 1.5rem;
+            font-style: italic;
+            height: 20px;
+        }
+.online-dot {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+    animation: pulse-green 2s infinite;
+}
+
+/* My Squads Specific Styles */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.status-badge.active { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+.status-badge.waiting { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+.status-badge.full { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+.status-badge.confirmed { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+
+.avatar-stack {
+    display: flex;
+    align-items: center;
+}
+.avatar-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--bg-secondary);
+    margin-left: -8px;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: help;
+    transition: transform 0.2s ease;
+}
+.avatar-circle:first-child { margin-left: 0; }
+.avatar-circle:hover { transform: translateY(-3px); z-index: 10; }
+
+.btn-cancel-squad, .btn-leave-squad {
+    border: 1px solid #ef4444 !important;
+    color: #ef4444 !important;
+    background: transparent !important;
+}
+.btn-cancel-squad:hover, .btn-leave-squad:hover {
+    background: rgba(239, 68, 68, 0.1) !important;
+}
+
+.squad-sub-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 2rem;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 5px;
+    border-radius: 12px;
+    width: fit-content;
+}
+.sub-tab-pill {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.sub-tab-pill.active {
+    background: var(--accent-primary);
+    color: white;
+}
+
+.card-fade-out {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: all 0.4s ease;
+}
+
+/* Cost Split Specific Styles */
+.cost-split-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-primary);
+    padding: 10px 0;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 10px;
+}
+.section-split {
+    scroll-margin-top: 80px;
+    margin-bottom: 4rem;
+}
+.split-header {
+    font-size: 1.4rem;
+    font-weight: 800;
+    border-left: 3px solid var(--accent-primary);
+    padding-left: 12px;
+    margin-bottom: 2rem;
+}
+.progress-bar-container {
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+    transition: width 0.6s ease;
+}
+.player-tag {
+    background: rgba(139, 92, 246, 0.2);
+    border: 1px solid var(--accent-primary);
+    border-radius: 20px;
+    padding: 4px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    margin: 4px;
+}
+.player-tag i { cursor: pointer; opacity: 0.7; transition: opacity 0.2s; }
+.player-tag i:hover { opacity: 1; }
+
+.split-method-toggles {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
+.split-method-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid var(--glass-border);
+    text-align: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.3s;
+}
+.split-method-btn.active {
+    background: var(--accent-primary);
+    border-color: var(--accent-primary);
+    color: white;
+}
+
+.payment-status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+}
+.paid-badge { color: #10b981; font-weight: 600; }
+.pending-badge { color: #f59e0b; font-weight: 600; }
+
+.receipt-modal-box {
+    max-width: 500px;
+    padding: 2.5rem;
+    text-align: center;
+}
+.receipt-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 0.9rem;
+}
+.receipt-table td { padding: 10px; border-bottom: 1px solid var(--glass-border); }
+
+.calculator-widget {
+    margin-top: 2rem;
+    padding: 2rem;
+    border-radius: 24px;
+}
+
+@keyframes fadeIn {            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -392,6 +737,10 @@
                     <i class="fas fa-users"></i>
                     <span>Squad Finder</span>
                 </div>
+                <div class="nav-item" onclick="showTab('cost-split')">
+                    <i class="fas fa-receipt"></i>
+                    <span>Cost Split</span>
+                </div>
 
                 <!-- Logout -->
                 <div class="nav-item logout-btn" style="margin-top: 2rem;" onclick="handleLogout()">
@@ -445,7 +794,6 @@
                 <div class="section-header-dash">
                     <h1>My Reservations</h1>
                 </div>
-                <!-- Standard ID for booking.js to target -->
                 <div id="my-bookings-list" class="my-bookings-list" style="margin-top: 2.5rem;">
                     <!-- Rendered List -->
                 </div>
@@ -456,7 +804,6 @@
                     <h1>Book a Court</h1>
                 </div>
 
-                <!-- Full Filter UI from Home Page -->
                 <div class="sport-filter-row fade-up" style="justify-content: flex-start; margin-bottom: 1.5rem; flex-wrap: wrap;">
                     <button class="sport-pill active" onclick="filterSport('All', this)">🏟️ All Sports</button>
                     <button class="sport-pill" onclick="filterSport('Cricket', this)">🏏 Cricket</button>
@@ -494,10 +841,8 @@
                     </select>
                 </div>
 
-                <!-- Standard ID for booking.js to target -->
                 <div class="centers-grid" id="centers-grid" style="margin-bottom: 5rem;"></div>
 
-                <!-- Live Map Preview Area -->
                 <div id="grounds-map" class="fade-up" style="margin-top: 4rem;">
                     <div class="section-header-dash">
                         <h2>Venue Location</h2>
@@ -522,7 +867,6 @@
                 <div class="section-header-dash">
                     <h1>Sports Memories</h1>
                 </div>
-                
                 <div class="glass" style="padding: 2.5rem; border-radius: 24px; margin-bottom: 3rem; text-align: center; border: 2px dashed rgba(255,255,255,0.1);">
                     <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: var(--accent-primary); margin-bottom: 1.5rem;"></i>
                     <h3>Upload a Memory</h3>
@@ -531,58 +875,44 @@
                     <button class="btn btn-primary" onclick="document.getElementById('memory-upload').click()">
                         <i class="fas fa-plus"></i> Select Photo
                     </button>
-                    <p style="font-size: 0.7rem; color: var(--text-secondary); margin-top: 1rem;">Supports JPG, PNG (Max 5MB)</p>
                 </div>
-
-                <div class="memories-grid" id="memories-grid">
-                    <!-- Memories will be rendered here -->
-                </div>
+                <div class="memories-grid" id="memories-grid"></div>
             </div>
 
             <!-- HEALTH TAB -->
             <div id="health-tab" style="display: none;">
                 <div class="section-header-dash" style="display: flex; justify-content: space-between; align-items: center;">
-                    <h1>Health & Fitness Dashboard</h1>
+                    <h1>Health Dashboard</h1>
                     <button onclick="downloadHealthPDF()" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.85rem;">
                         <i class="fas fa-file-medical"></i> Major PDF Report
                     </button>
                 </div>
-                
                 <div class="glass" style="padding: 2.5rem; border-radius: 24px; margin-bottom: 3rem;">
                     <form onsubmit="calculateHealth(event)">
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
                             <div class="form-group">
-                                <label>Enter Age (Years)</label>
+                                <label>Age</label>
                                 <input type="number" id="health-age" class="modal-input" required min="10" max="100">
                             </div>
                             <div class="form-group">
-                                <label>Enter Weight (kg)</label>
+                                <label>Weight (kg)</label>
                                 <input type="number" id="health-weight" class="modal-input" required min="30" max="250" step="0.1">
                             </div>
                             <div class="form-group">
-                                <label>Enter Height (cm)</label>
+                                <label>Height (cm)</label>
                                 <input type="number" id="health-height" class="modal-input" required min="100" max="250">
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px;">Calculate Health Metrics</button>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px;">Calculate Metrics</button>
                     </form>
-
                     <div id="health-results" style="display: none; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--glass-border);">
-                        <h3 style="color: var(--accent-primary); margin-bottom: 1.5rem;">Latest Assessment Results</h3>
-                        <p id="health-output-text" style="font-size: 1.1rem; line-height: 1.6; color: var(--text-primary);">
-                            <!-- Results will be injected here -->
-                        </p>
+                        <h3 style="color: var(--accent-primary); margin-bottom: 1.5rem;">Results</h3>
+                        <p id="health-output-text" style="font-size: 1.1rem; line-height: 1.6; color: var(--text-primary);"></p>
                     </div>
                 </div>
-
-                <div class="section-header-dash">
-                    <h2>Recent Health Profile History</h2>
-                    <p style="color: var(--text-secondary);">Track your fitness progress over time.</p>
-                </div>
-                <div id="health-history-list" class="glass" style="padding: 1.5rem; border-radius: 20px; min-height: 100px;">
-                    <div style="text-align: center; color: var(--text-secondary); padding: 2rem;">Loading history...</div>
-                </div>
+                <div id="health-history-list" class="glass" style="padding: 1.5rem; border-radius: 20px; min-height: 100px;"></div>
             </div>
+
             <!-- SQUAD FINDER TAB -->
             <div id="squad-tab" style="display: none;">
                 <div class="section-header-dash">
@@ -592,36 +922,29 @@
                     </button>
                 </div>
 
-                <!-- Post Slot Form (Collapsible) -->
-                <div id="post-slot-form" class="glass" style="display: none; padding: 2rem; border-radius: 24px; margin-bottom: 3rem; animation: fadeIn 0.4s ease;">
+                <div id="post-slot-form" class="glass" style="display: none; padding: 2rem; border-radius: 24px; margin-bottom: 3rem;">
                     <h3 style="margin-bottom: 1.5rem; color: var(--accent-primary);">Post an Open Slot</h3>
                     <form onsubmit="handlePostSquadSlot(event)">
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
                             <div class="form-group">
                                 <label>Sport Type</label>
-                                <select id="squad-sport" class="modal-input" required onchange="populateVenueDatalist()">
+                                <select id="squad-sport" class="modal-input" required>
                                     <option value="">Select Sport</option>
-                                    <option>Football</option>
-                                    <option>Cricket</option>
-                                    <option>Badminton</option>
-                                    <option>Padel</option>
-                                    <option>Pickleball</option>
-                                    <option>Futsal</option>
+                                    <option>Football</option><option>Cricket</option><option>Badminton</option>
+                                    <option>Padel</option><option>Pickleball</option><option>Futsal</option>
                                     <option>Basketball</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label>Venue Name</label>
-                                <input type="text" id="squad-venue" class="modal-input" placeholder="e.g. Futsal World" list="venue-list" required oninput="handleVenueInput(this.value)" onfocus="populateVenueDatalist()">
-                                <datalist id="venue-list">
-                                    <!-- Populated dynamically -->
-                                </datalist>
+                                <input type="text" id="squad-venue" class="modal-input" placeholder="e.g. Futsal World" required>
                             </div>
                             <div class="form-group">
                                 <label>City</label>
-                                <select id="squad-city" class="modal-input" required onchange="populateVenueDatalist()">
+                                <select id="squad-city" class="modal-input" required>
                                     <option value="">Select City</option>
-                                    <!-- Populated dynamically -->
+                                    <option>Colombo</option><option>Kandy</option><option>Galle</option>
+                                    <option>Negombo</option><option>Jaffna</option>
                                 </select>
                             </div>
                             <div class="form-group">
@@ -635,15 +958,13 @@
                             <div class="form-group">
                                 <label>Skill Level</label>
                                 <select id="squad-skill" class="modal-input" required>
-                                    <option>Beginner</option>
-                                    <option selected>Intermediate</option>
-                                    <option>Advanced</option>
+                                    <option>Beginner</option><option selected>Intermediate</option><option>Advanced</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group" style="margin-bottom: 1.5rem;">
                             <label>Optional Message</label>
-                            <textarea id="squad-message" class="modal-input" style="height: 80px; resize: none;" placeholder="Tell potential squad mates about the game..."></textarea>
+                            <textarea id="squad-message" class="modal-input" style="height: 80px; resize: none;" placeholder="Message..."></textarea>
                         </div>
                         <div style="display: flex; gap: 1rem;">
                             <button type="submit" class="btn btn-primary" style="flex: 1; padding: 12px;">Publish Slot</button>
@@ -652,972 +973,1052 @@
                     </form>
                 </div>
 
-                <!-- Tabs for Feed vs My Squads -->
-                <div class="sport-filter-row" style="justify-content: flex-start; margin-bottom: 2rem; gap: 10px;">
-                    <button class="sport-pill active" id="btn-squad-feed" onclick="switchSquadSubTab('feed')">Open Squads</button>
+                <div class="sport-filter-row" style="justify-content: flex-start; margin-bottom: 2rem; gap: 10px; flex-wrap: wrap;">
+                    <button class="sport-pill active" id="btn-squad-feed" onclick="switchSquadSubTab('feed')">Open Slots</button>
                     <button class="sport-pill" id="btn-squad-mine" onclick="switchSquadSubTab('mine')">My Squads</button>
                 </div>
 
                 <div id="squad-feed-view">
-                    <div class="squad-grid" id="squad-grid">
-                        <!-- Open squad slots will be rendered here -->
-                        <div style="text-align: center; color: var(--text-secondary); padding: 3rem; grid-column: 1/-1;">
-                            <i class="fas fa-circle-notch fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
-                            <p>Connecting to SportSphere Matchmaker...</p>
+                    <div class="squad-grid" id="squad-grid"></div>
+                </div>
+
+                <div id="squad-mine-view" style="display: none;">
+                    <div class="squad-sub-tabs">
+                        <div class="sub-tab-pill active" id="pill-posted" onclick="switchMySquadsSubTab('posted')">Posted by Me</div>
+                        <div class="sub-tab-pill" id="pill-joined" onclick="switchMySquadsSubTab('joined')">Joined</div>
+                    </div>
+
+                    <div id="my-posted-squads-view">
+                        <div class="squad-grid" id="my-posted-squads-grid"></div>
+                    </div>
+
+                    <div id="my-joined-squads-view" style="display: none;">
+                        <div class="squad-grid" id="my-joined-squads-grid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COST SPLIT TAB -->
+            <div id="cost-split-tab" style="display: none;">
+                <div class="cost-split-nav glass" id="cost-split-sticky-nav">
+                    <button class="sub-tab-pill active" onclick="scrollToSplitSection('section-create')">💰 Split a Booking</button>
+                    <button class="sub-tab-pill" onclick="scrollToSplitSection('section-active')">📋 My Active Splits</button>
+                    <button class="sub-tab-pill" onclick="scrollToSplitSection('section-invited')">🔗 Invited Splits</button>
+                </div>
+
+                <!-- Section 1: Split a Booking -->
+                <div id="section-create" class="section-split">
+                    <div class="split-header">Split a Booking</div>
+                    <div class="glass" style="max-width: 700px; margin: 0 auto; padding: 2.5rem; border-radius: 24px;">
+                        <form onsubmit="handleCreateSplit(event)">
+                            <div class="form-group" style="margin-bottom: 1.5rem;">
+                                <label>Booking Title</label>
+                                <input type="text" id="split-title" class="modal-input" placeholder="e.g. Saturday Padel at Ace Club" required>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                                <div class="form-group">
+                                    <label>Sport</label>
+                                    <select id="split-sport" class="modal-input" required>
+                                        <option>Padel</option><option>Futsal</option><option>Badminton</option>
+                                        <option>Basketball</option><option>Cricket</option><option>Volleyball</option>
+                                        <option>Pickleball</option><option>Football</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Venue Name</label>
+                                    <input type="text" id="split-venue" class="modal-input" placeholder="e.g. Ace Padel Club" required>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                                <div class="form-group">
+                                    <label>City</label>
+                                    <select id="split-city" class="modal-input" required>
+                                        <option>Colombo</option><option>Kandy</option><option>Galle</option>
+                                        <option>Negombo</option><option>Jaffna</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date & Time</label>
+                                    <input type="datetime-local" id="split-datetime" class="modal-input" required>
+                                </div>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                                <div class="form-group">
+                                    <label>Total Court Cost (LKR)</label>
+                                    <input type="number" id="split-total-cost" class="modal-input" placeholder="e.g. 4500" required oninput="updateSplitPreview()">
+                                </div>
+                                <div class="form-group">
+                                    <label>Number of Players</label>
+                                    <input type="number" id="split-players-count" class="modal-input" value="4" min="2" max="20" required oninput="updateSplitPreview()">
+                                </div>
+                            </div>
+
+                            <div style="margin-bottom: 1.5rem; text-align: center;">
+                                <p style="font-size: 0.9rem; color: var(--text-secondary);">Each player pays:</p>
+                                <p id="split-per-player-preview" style="font-size: 1.8rem; font-weight: 800; color: var(--accent-primary);">LKR 0</p>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 1.5rem;">
+                                <label>Add Players (Type name & press Enter)</label>
+                                <div id="split-players-tags" style="margin-bottom: 10px; display: flex; flex-wrap: wrap;"></div>
+                                <input type="text" id="split-player-input" class="modal-input" placeholder="Type a name..." onkeydown="handlePlayerTagInput(event)">
+                            </div>
+
+                            <label style="display: block; margin-bottom: 10px;">Split Method</label>
+                            <div class="split-method-toggles">
+                                <div class="split-method-btn active" id="btn-split-equal" onclick="setSplitMethod('equal')">Equal Split</div>
+                                <div class="split-method-btn" id="btn-split-custom" onclick="setSplitMethod('custom')">Custom Split</div>
+                            </div>
+
+                            <div id="custom-split-amounts" style="display: none; margin-bottom: 1.5rem;">
+                                <!-- Custom amount inputs will be injected here -->
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px; font-weight: 700;">
+                                <i class="fas fa-link" style="margin-right: 10px;"></i> Create Split & Generate Link
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Calculator Widget -->
+                    <div class="glass calculator-widget" style="max-width: 700px; margin: 3rem auto 0 auto;">
+                        <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-calculator" style="color: var(--accent-primary);"></i> Quick Cost Calculator
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem;">
+                            <div class="form-group">
+                                <label>Total Cost (LKR)</label>
+                                <input type="number" id="calc-cost" class="modal-input" value="4500" oninput="runCalculator()">
+                            </div>
+                            <div class="form-group">
+                                <label>Players</label>
+                                <input type="number" id="calc-players" class="modal-input" value="4" min="1" oninput="runCalculator()">
+                            </div>
+                            <div class="form-group">
+                                <label>Method</label>
+                                <select id="calc-method" class="modal-input" onchange="runCalculator()">
+                                    <option value="equal">Equal</option>
+                                    <option value="percent">Percentage</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="calc-output" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--glass-border);">
+                            <!-- Live calc output -->
                         </div>
                     </div>
                 </div>
 
-                <div id="squad-mine-view" style="display: none;">
-                    <h3 style="margin-bottom: 1.5rem;">Squads I've Posted</h3>
-                    <div class="squad-grid" id="my-posted-squads"></div>
-                    
-                    <h3 style="margin-top: 3rem; margin-bottom: 1.5rem;">Squads I've Joined</h3>
-                    <div class="squad-grid" id="my-joined-squads"></div>
+                <!-- Section 2: My Active Splits -->
+                <div id="section-active" class="section-split">
+                    <div class="split-header">My Active Splits</div>
+                    <div class="squad-grid" id="my-splits-grid"></div>
+                </div>
+
+                <!-- Section 3: Invited Splits -->
+                <div id="section-invited" class="section-split">
+                    <div class="split-header">Invited Splits</div>
+                    <div class="squad-grid" id="invited-splits-grid"></div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- SportSphere AI Assistant Widget -->
-    <div id="ai-widget" class="ai-widget">
-        <div id="ai-chat-window" class="glass ai-chat-window">
-            <div class="ai-chat-header">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-robot" style="color: var(--accent-primary);"></i>
+    <!-- CHAT OVERLAY -->
+    <div id="chat-overlay" class="chat-overlay">
+        <div class="chat-container glass">
+            <div class="chat-header">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div id="chat-room-icon" style="font-size: 1.5rem;">🎾</div>
                     <div>
-                        <strong style="display: block; font-size: 0.9rem;">SportSphere AI</strong>
-                        <span style="font-size: 0.7rem; color: #10b981;">● Online Assistant</span>
+                        <h4 id="chat-room-name" style="margin: 0;">Room Name</h4>
+                        <span id="chat-room-members" style="font-size: 0.7rem; color: var(--text-secondary);">0 Members</span>
                     </div>
                 </div>
-                <button onclick="toggleAIChat()" style="background:none; border:none; color: var(--text-primary); cursor:pointer;"><i class="fas fa-times"></i></button>
+                <button onclick="closeChatRoom()" style="background:none; border:none; color:white; cursor:pointer; font-size:1.2rem;"><i class="fas fa-times"></i></button>
             </div>
-            <div id="ai-messages" class="ai-messages">
-                <div class="ai-msg bot">Hello! I'm your SportSphere AI. How can I help you find the perfect game today?</div>
-            </div>
-            <div class="ai-chat-input">
-                <input type="text" id="ai-input" placeholder="Ask about venues or sports..." onkeypress="handleAIKey(event)">
-                <button onclick="sendAIMessage()"><i class="fas fa-paper-plane"></i></button>
-            </div>
-        </div>
-        <button class="ai-float-btn" onclick="toggleAIChat()">
-            <i class="fas fa-comment-dots"></i>
-            <span class="ai-notif">1</span>
-        </button>
-    </div>
-
-    <!-- Modals & Toasts -->
-    <div class="modal-overlay" id="booking-modal">
-        <div class="modal-box glass">
-            <button class="modal-close-btn" onclick="closeBookingModal()"><i class="fas fa-times"></i></button>
-            <div id="modal-content"></div>
-        </div>
-    </div>
-
-    <!-- Mock Payment Modal -->
-    <div class="modal-overlay" id="payment-modal">
-        <div class="modal-box glass" style="max-width: 480px;">
-            <div id="payment-content">
-                <!-- Injected via booking.js -->
+            <div id="chat-messages-feed" class="chat-messages"></div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input-msg" class="chat-input" placeholder="Type a message..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+                <button class="btn btn-primary" onclick="sendChatMessage()" style="width: 45px; height: 45px; padding: 0; display: grid; place-items: center; border-radius: 12px;">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
             </div>
         </div>
     </div>
 
     <div id="toast-msg" class="toast-msg"></div>
 
+    <!-- COST SPLIT SUCCESS MODAL -->
+    <div class="modal-overlay" id="split-success-modal" style="z-index: 3000;">
+        <div class="modal-box glass" style="max-width: 450px; text-align: center; padding: 3rem;">
+            <div style="width: 80px; height: 80px; background: rgba(16, 185, 129, 0.1); border-radius: 50%; display: grid; place-items: center; margin: 0 auto 1.5rem auto;">
+                <i class="fas fa-check" style="font-size: 2.5rem; color: #10b981;"></i>
+            </div>
+            <h2 style="margin-bottom: 0.5rem;">Split Created!</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 2rem;">Share this link with your teammates to collect payments.</p>
+            
+            <div class="glass" style="padding: 15px; border-radius: 12px; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px; border: 1px dashed var(--accent-primary);">
+                <span id="share-link-text" style="font-size: 0.85rem; color: white; font-weight: 600; flex: 1; text-align: left;">sportsphere.biz/split/abc12345</span>
+                <i class="fas fa-copy" style="color: var(--accent-primary); cursor: pointer;" onclick="copySplitLink()"></i>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn" style="background: #25D366; color: white; border: none; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px;" onclick="shareToWhatsApp()">
+                    <i class="fab fa-whatsapp" style="font-size: 1.2rem;"></i> Share via WhatsApp
+                </button>
+                <button class="btn btn-primary" style="width: 100%;" onclick="closeSplitSuccess()">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAYMENT MODAL -->
+    <div class="modal-overlay" id="payment-modal" style="z-index: 3000;">
+        <div class="modal-box glass" style="max-width: 420px; padding: 2.5rem;">
+            <button class="modal-close-btn" onclick="closePaymentModal()"><i class="fas fa-times"></i></button>
+            <h3 style="margin-bottom: 1.5rem;">Complete Payment</h3>
+            
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <p style="font-size: 0.9rem; color: var(--text-secondary);">Amount Due</p>
+                <p id="payment-amount-display" style="font-size: 2.5rem; font-weight: 800; color: var(--accent-primary);">LKR 0</p>
+            </div>
+
+            <div class="split-method-toggles">
+                <div class="split-method-btn active" id="pay-method-card" onclick="setPayMethod('card')">💳 Card</div>
+                <div class="split-method-btn" id="pay-method-later" onclick="setPayMethod('later')">🏦 Pay Later</div>
+            </div>
+
+            <div id="card-fields-wrap">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>Card Number</label>
+                    <input type="text" class="payment-card-input" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div class="form-group">
+                        <label>Expiry (MM/YY)</label>
+                        <input type="text" class="payment-card-input" placeholder="MM/YY">
+                    </div>
+                    <div class="form-group">
+                        <label>CVV</label>
+                        <input type="password" class="payment-card-input" placeholder="***" maxlength="3">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label>Cardholder Name</label>
+                    <input type="text" class="payment-card-input" placeholder="John Doe">
+                </div>
+            </div>
+
+            <div id="pay-later-wrap" style="display: none; text-align: center; padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 2rem;">
+                <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5;">You've chosen to pay later. The organizer will be notified once you settle up.</p>
+            </div>
+
+            <button class="btn btn-primary" style="width: 100%; padding: 15px;" onclick="confirmSplitPayment()">Confirm Payment</button>
+        </div>
+    </div>
+
+    <!-- RECEIPT MODAL -->
+    <div class="modal-overlay" id="receipt-modal" style="z-index: 3000;">
+        <div class="modal-box glass receipt-modal-box">
+            <button class="modal-close-btn" onclick="closeReceiptModal()"><i class="fas fa-times"></i></button>
+            <i class="fas fa-basketball-ball" style="font-size: 2rem; color: var(--accent-primary); margin-bottom: 1rem;"></i>
+            <h2 style="margin-bottom: 0.5rem;">Payment Receipt</h2>
+            <p id="receipt-title" style="font-weight: 700; color: white;">Saturday Padel — Ace Club</p>
+            <p id="receipt-date" style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Tuesday, March 17, 2026</p>
+            
+            <table class="receipt-table">
+                <tbody id="receipt-body">
+                    <!-- Table rows -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td style="font-weight: 800; border: none; text-align: left;">Total Settled</td>
+                        <td id="receipt-total" style="font-weight: 800; border: none; text-align: right; color: var(--accent-primary);">LKR 3,200</td>
+                    </tr>
+                </tfoot>
+            </table>
+
+            <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 2rem;">All payments settled via SportSphere Cost Split</p>
+            <button class="btn btn-outline" style="width: 100%;" onclick="downloadReceiptPDF()">
+                <i class="fas fa-file-pdf"></i> Download PDF
+            </button>
+        </div>
+    </div>
+
     <script src="js/main.js"></script>
     <script src="js/booking.js"></script>
     <script src="js/ai-brain.js"></script>
     <script>
-        function handleLogout() {
-            if(confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('user_data');
-                window.location.href = 'index.html';
-            }
-        }
-
-        // SportSphere AI Core Logic (Local Smart Brain Engine)
-        let currentAILang = 'en';
-
-        function toggleAIChat() {
-            const window = document.getElementById('ai-chat-window');
-            window.classList.toggle('active');
-            document.querySelector('.ai-notif').style.display = 'none';
-        }
-
-        function handleAIKey(e) { if(e.key === 'Enter') sendAIMessage(); }
-
-        async function sendAIMessage() {
-            const input = document.getElementById('ai-input');
-            const msg = input.value.trim();
-            if(!msg) return;
-
-            appendAIMessage(msg, 'user');
-            input.value = '';
-
-            // Language switch detection
-            const lowMsg = msg.toLowerCase();
-            if (lowMsg.includes("sinhala") || lowMsg.includes("සිංහල")) currentAILang = 'si';
-            if (lowMsg.includes("english") || lowMsg.includes("ඉංග්‍රීසි")) currentAILang = 'en';
-
-            const container = document.getElementById('ai-messages');
-            const typingDiv = document.createElement('div');
-            typingDiv.className = 'ai-msg bot typing';
-            typingDiv.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
-            typingDiv.id = 'ai-typing';
-            container.appendChild(typingDiv);
-            container.scrollTop = container.scrollHeight;
-
-            // Simulated AI Thinking Delay (800ms)
-            setTimeout(() => {
-                document.getElementById('ai-typing')?.remove();
-                
-                // Use SSB (Smart Semantic Brain) from js/ai-brain.js
-                try {
-                    const response = SSB.process(msg);
-                    appendAIMessage(response, 'bot');
-                } catch (e) {
-                    console.error("AI Error:", e);
-                    appendAIMessage("I'm having a little trouble thinking. Can you try asking in a different way?", 'bot');
-                }
-            }, 800);
-        }
-
-        function appendAIMessage(text, side) {
-            const container = document.getElementById('ai-messages');
-            if(!container) return;
-            const div = document.createElement('div');
-            div.className = `ai-msg ${side}`;
-            div.innerText = text;
-            container.appendChild(div);
-            container.scrollTop = container.scrollHeight;
-        }
-
-
-
+        function handleLogout() { if(confirm('Logout?')) { localStorage.removeItem('user_data'); window.location.href = 'index.html'; } }
         function showTab(tab) {
-            document.getElementById('home-tab').style.display = tab === 'home' ? 'block' : 'none';
-            document.getElementById('bookings-tab').style.display = tab === 'bookings' ? 'block' : 'none';
-            document.getElementById('explore-tab').style.display = tab === 'explore' ? 'block' : 'none';
-            document.getElementById('health-tab').style.display = tab === 'health' ? 'block' : 'none';
-            document.getElementById('memories-tab').style.display = tab === 'memories' ? 'block' : 'none';
-            document.getElementById('squad-tab').style.display = tab === 'squad' ? 'block' : 'none';
-
+            document.querySelectorAll('main > div[id$="-tab"]').forEach(el => el.style.display = 'none');
+            const target = document.getElementById(tab + '-tab');
+            if(target) target.style.display = 'block';
             document.querySelectorAll('.nav-item').forEach(item => {
-                const tabAttr = item.getAttribute('onclick');
-                item.classList.toggle('active', tabAttr && tabAttr.includes(`'${tab}'`));
+                const attr = item.getAttribute('onclick');
+                item.classList.toggle('active', attr && attr.includes(`'${tab}'`));
             });
-
-            if (tab === 'explore') {
-                window.renderCenters();
-                setTimeout(() => {
-                    document.querySelectorAll('#centers-grid .fade-up').forEach(el => el.classList.add('visible'));
-                }, 50);
-            }
-            if (tab === 'bookings') {
-                window.renderMyBookings();
-                setTimeout(() => {
-                    document.querySelectorAll('#my-bookings-list .fade-up').forEach(el => el.classList.add('visible'));
-                }, 50);
-            }
-            if (tab === 'memories') {
-                renderMemories();
-            }
-            if (tab === 'health') {
-                loadHealthHistory();
-            }
-            if (tab === 'squad') {
-                initSquadFinder();
-            }
+            if (tab === 'squad') initSquadFinder();
+            if (tab === 'cost-split') initCostSplit();
+            if (tab === 'memories') renderMemories();
+            if (tab === 'health') loadHealthHistory();
+            if (tab === 'explore') window.renderCenters && window.renderCenters();
+            if (tab === 'bookings') window.renderMyBookings && window.renderMyBookings();
             if (tab === 'home') updateStats();
         }
 
-        // --- Squad Finder Logic ---
-        let squadListener = null;
+        // --- Cost Split Logic ---
+        let currentSplitMethod = 'equal';
+        let playerTags = [];
 
-        function initSquadFinder() {
-            if (squadListener) return; // Already listening
-            loadSquadSlots();
-            populateVenueDatalist();
-            populateCityDropdown();
+        function initCostSplit() {
+            renderActiveSplits();
+            renderInvitedSplits();
+            updateSplitPreview();
+            runCalculator();
+            setupSplitObserver();
         }
 
-        function populateVenueDatalist() {
-            const datalist = document.getElementById('venue-list');
-            const sportSelect = document.getElementById('squad-sport');
-            const citySelect = document.getElementById('squad-city');
-            
-            const selectedSport = sportSelect ? sportSelect.value : "";
-            const selectedCity = citySelect ? citySelect.value : "";
-            
-            // Check global CENTERS from booking.js
-            const centersList = typeof CENTERS !== 'undefined' ? CENTERS : (window.CENTERS || []);
-            
-            if (!datalist || !centersList.length) {
-                console.warn("SportSphere: CENTERS data not found for datalist.");
-                return;
-            }
-            
-            datalist.innerHTML = '';
-            
-            let filteredVenues = centersList;
-            
-            // Filter by Sport
-            if (selectedSport && selectedSport !== "" && selectedSport !== "Select Sport") {
-                filteredVenues = filteredVenues.filter(c => c.sports && c.sports.includes(selectedSport));
-            }
-            
-            // Filter by City
-            if (selectedCity && selectedCity !== "" && selectedCity !== "Select City") {
-                filteredVenues = filteredVenues.filter(c => c.city === selectedCity);
-            }
-            
-            const venueNames = [...new Set(filteredVenues.map(c => c.name))].sort();
-            
-            venueNames.forEach(name => {
-                const option = document.createElement('option');
-                option.value = name;
-                datalist.appendChild(option);
-            });
+        function scrollToSplitSection(id) {
+            const el = document.getElementById(id);
+            if(el) el.scrollIntoView({ behavior: 'smooth' });
         }
 
-        function populateCityDropdown() {
-            const citySelect = document.getElementById('squad-city');
-            const centersList = typeof CENTERS !== 'undefined' ? CENTERS : (window.CENTERS || []);
+        function setupSplitObserver() {
+            const sections = document.querySelectorAll('.section-split');
+            const pills = document.querySelectorAll('#cost-split-sticky-nav .sub-tab-pill');
             
-            if (!citySelect || !centersList.length) return;
-            
-            const selected = citySelect.value;
-            citySelect.innerHTML = '<option value="">Select City</option>';
-            
-            const cities = [...new Set(centersList.map(c => c.city).filter(Boolean))].sort();
-            cities.forEach(city => {
-                const option = document.createElement('option');
-                option.value = city;
-                option.textContent = city;
-                citySelect.appendChild(option);
-            });
-            citySelect.value = selected;
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        pills.forEach(p => p.classList.remove('active'));
+                        const targetId = entry.target.id;
+                        const activeBtn = document.querySelector(`#cost-split-sticky-nav button[onclick*='${targetId}']`);
+                        if(activeBtn) activeBtn.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            sections.forEach(s => observer.observe(s));
         }
 
-        function handleVenueInput(val) {
-            const centersList = typeof CENTERS !== 'undefined' ? CENTERS : (window.CENTERS || []);
-            if (!centersList.length) return;
+        function updateSplitPreview() {
+            const total = parseFloat(document.getElementById('split-total-cost').value) || 0;
+            const players = parseInt(document.getElementById('split-players-count').value) || 2;
+            const perPlayer = total / players;
+            document.getElementById('split-per-player-preview').innerText = `LKR ${perPlayer.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
             
-            const match = centersList.find(c => c.name.toLowerCase() === val.toLowerCase());
-            if (match) {
-                // Auto-fill City
-                const citySelect = document.getElementById('squad-city');
-                if (citySelect) {
-                    citySelect.value = match.city;
+            if(currentSplitMethod === 'custom') renderCustomAmountInputs();
+        }
+
+        function handlePlayerTagInput(e) {
+            if(e.key === 'Enter' || e.key === ',') {
+                e.preventDefault();
+                const val = e.target.value.trim();
+                if(val && !playerTags.includes(val)) {
+                    playerTags.push(val);
+                    renderPlayerTags();
+                    if(currentSplitMethod === 'custom') renderCustomAmountInputs();
                 }
-                
-                // If only one sport, auto-fill Sport Type
-                const sportSelect = document.getElementById('squad-sport');
-                if (sportSelect && match.sports && match.sports.length === 1) {
-                    sportSelect.value = match.sports[0];
-                }
+                e.target.value = '';
             }
         }
 
-        function togglePostSlotForm() {
-            const form = document.getElementById('post-slot-form');
-            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        function renderPlayerTags() {
+            const wrap = document.getElementById('split-players-tags');
+            wrap.innerHTML = playerTags.map((name, i) => `
+                <span class="player-tag">${name} <i class="fas fa-times" onclick="removePlayerTag(${i})"></i></span>
+            `).join('');
         }
 
-        function switchSquadSubTab(sub) {
-            document.getElementById('squad-feed-view').style.display = sub === 'feed' ? 'block' : 'none';
-            document.getElementById('squad-mine-view').style.display = sub === 'mine' ? 'block' : 'none';
-            
-            document.getElementById('btn-squad-feed').classList.toggle('active', sub === 'feed');
-            document.getElementById('btn-squad-mine').classList.toggle('active', sub === 'mine');
-            
-            if (sub === 'mine') renderMySquads();
+        function removePlayerTag(index) {
+            playerTags.splice(index, 1);
+            renderPlayerTags();
+            if(currentSplitMethod === 'custom') renderCustomAmountInputs();
         }
 
-        async function handlePostSquadSlot(e) {
+        function setSplitMethod(method) {
+            currentSplitMethod = method;
+            document.getElementById('btn-split-equal').classList.toggle('active', method === 'equal');
+            document.getElementById('btn-split-custom').classList.toggle('active', method === 'custom');
+            document.getElementById('custom-split-amounts').style.display = method === 'custom' ? 'block' : 'none';
+            if(method === 'custom') renderCustomAmountInputs();
+        }
+
+        function renderCustomAmountInputs() {
+            const wrap = document.getElementById('custom-split-amounts');
+            const total = parseFloat(document.getElementById('split-total-cost').value) || 0;
+            const players = [...playerTags];
+            if(!players.includes('You (Organizer)')) players.unshift('You (Organizer)');
+
+            wrap.innerHTML = '<h4 style="margin-bottom:1rem; font-size:0.9rem;">Assign Amounts:</h4>' + players.map(name => `
+                <div class="form-group" style="margin-bottom: 10px; display: flex; align-items: center; gap: 15px;">
+                    <label style="flex: 1; margin: 0; font-size: 0.85rem;">${name}</label>
+                    <input type="number" class="modal-input custom-split-input" style="width: 120px;" placeholder="Amount" value="${(total/players.length).toFixed(0)}">
+                </div>
+            `).join('');
+        }
+
+        async function handleCreateSplit(e) {
             e.preventDefault();
             const user = window.SS_FB?.auth?.currentUser;
-            if (!user) { showToast("Please login to post!"); return; }
+            if(!user) { showToast("Please login first!"); return; }
 
-            const slotData = {
-                sport: document.getElementById('squad-sport').value,
-                venue: document.getElementById('squad-venue').value,
-                city: document.getElementById('squad-city').value,
-                datetime: new Date(document.getElementById('squad-datetime').value).toISOString(),
-                playersNeeded: parseInt(document.getElementById('squad-players').value),
-                skillLevel: document.getElementById('squad-skill').value,
-                message: document.getElementById('squad-message').value,
-                postedBy: user.uid,
-                postedByName: user.displayName || "SportSphere Member",
-                joiners: [],
-                status: "open",
-                createdAt: window.SS_FB.methods.serverTimestamp()
-            };
-
-            try {
-                showToast("📡 Publishing your squad slot...");
-                await window.SS_FB.methods.addDoc(window.SS_FB.methods.collection(window.SS_FB.db, "squad_slots"), slotData);
-                showToast("✅ Squad slot posted successfully!");
-                e.target.reset();
-                togglePostSlotForm();
-            } catch (err) {
-                console.error("Post error:", err);
-                showToast("❌ Failed to post squad slot.");
-            }
-        }
-
-        function loadSquadSlots() {
-            if (!window.SS_FB) return;
-            const { db, methods } = window.SS_FB;
-            const q = methods.query(methods.collection(db, "squad_slots"));
-
-            squadListener = methods.onSnapshot(q, (snapshot) => {
-                const slots = [];
-                snapshot.forEach(doc => slots.push({ id: doc.id, ...doc.data() }));
-                // Sort by createdAt desc
-                slots.sort((a,b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-                renderSquadSlots(slots);
-                window.allSquadSlots = slots; // Global cache for My Squads
-                if (document.getElementById('squad-mine-view').style.display === 'block') renderMySquads();
-            });
-        }
-
-        function renderSquadSlots(slots) {
-            const grid = document.getElementById('squad-grid');
-            const user = window.SS_FB?.auth?.currentUser;
+            const id = 'ss_split_' + Date.now() + Math.random().toString(16).substr(2, 4);
+            const shareCode = id.substr(-8);
             
-            const openSlots = slots.filter(s => s.status === 'open' && s.postedBy !== user?.uid);
+            showToast("📡 Generating share link...");
+            
+            // In a real app, we would write to Firestore here
+            // await window.SS_FB.methods.addDoc(window.SS_FB.methods.collection(window.SS_FB.db, "cost_splits"), {...});
 
-            if (openSlots.length === 0) {
-                grid.innerHTML = `<div style="text-align: center; color: var(--text-secondary); padding: 3rem; grid-column: 1/-1;">
-                    <i class="fas fa-search" style="font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                    <p>No open squads currently. Be the first to post!</p>
-                </div>`;
-                return;
-            }
-
-            grid.innerHTML = openSlots.map(s => createSquadCard(s, user)).join('');
+            document.getElementById('share-link-text').innerText = `sportsphere.biz/split/${shareCode}`;
+            document.getElementById('split-success-modal').style.display = 'flex';
+            e.target.reset();
+            playerTags = [];
+            renderPlayerTags();
         }
 
-        function createSquadCard(s, user) {
-            const isFull = s.playersNeeded <= 0;
-            const hasJoined = s.joiners?.some(j => j.uid === user?.uid);
-            const sportIcons = {
-                'Football': '⚽', 'Cricket': '🏏', 'Badminton': '🏸', 
-                'Padel': '🎾', 'Pickleball': '🏓', 'Futsal': '🥅', 'Basketball': '🏀'
-            };
-            
-            return `
-                <div class="glass squad-card fade-up visible">
-                    <div class="squad-badge" style="background: ${isFull ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)'}; color: ${isFull ? '#ef4444' : '#10b981'}">
-                        ${isFull ? 'Full' : 'Open Slot'}
+        function closeSplitSuccess() { document.getElementById('split-success-modal').style.display = 'none'; }
+        function copySplitLink() { 
+            const link = document.getElementById('share-link-text').innerText;
+            navigator.clipboard.writeText(link);
+            showToast("Link copied! 🔗");
+        }
+        function shareToWhatsApp() {
+            const title = document.getElementById('split-title').value || "Sports Booking";
+            const link = document.getElementById('share-link-text').innerText;
+            window.open(`https://wa.me/?text=Hey! Join my SportSphere cost split for ${title}. Pay your share here: ${link}`);
+        }
+
+        // Section 2: Active Splits Rendering
+        function renderActiveSplits() {
+            const grid = document.getElementById('my-splits-grid');
+            const demos = [
+                { id: 'sa1', title: 'Saturday Padel — Ace Club', sport: 'Padel', emoji: '🎾', venue: 'Ace Padel Club', city: 'Colombo', date: 'This Saturday, 7:00 AM', total: 4500, count: 4, per: 1125, paid: 2, status: 'Active 🟢', players: [{n:'You', p:true}, {n:'Anika S.', p:true}, {n:'Nimal D.', p:false}, {n:'Priya W.', p:false}] },
+                { id: 'sa2', title: 'Sunday Futsal — Arena Park', sport: 'Futsal', emoji: '⚽', venue: 'Arena Futsal Park', city: 'Kandy', date: 'This Sunday, 5:00 PM', total: 6000, count: 6, per: 1000, paid: 4, status: 'Active 🟢', players: [{n:'You', p:true}, {n:'Thisara M.', p:true}, {n:'Ruwan K.', p:true}, {n:'Sachith B.', p:false}, {n:'Kavin R.', p:true}, {n:'Dilshan P.', p:false}] },
+                { id: 'sa3', title: 'Morning Badminton — Smash Center', sport: 'Badminton', emoji: '🏸', venue: 'Smash Center', city: 'Colombo', date: 'Last Tuesday', total: 3200, count: 4, per: 800, paid: 4, status: 'Settled ✅', statusClass:'settled', players: [{n:'You', p:true}, {n:'Sahan P.', p:true}, {n:'Dilini R.', p:true}, {n:'Arjun K.', p:true}] }
+            ];
+
+            grid.innerHTML = demos.map(s => {
+                const progress = (s.paid / s.count) * 100;
+                return `
+                <div class="glass squad-card fade-up visible" id="active-split-${s.id}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <span style="font-size: 1.5rem;">${s.emoji}</span>
+                        <span class="status-badge ${s.status === 'Active 🟢' ? 'active' : 'confirmed'}" style="background: rgba(255,255,255,0.05)">${s.status}</span>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <div class="squad-sport-icon">${sportIcons[s.sport] || '🏆'}</div>
-                        <div>
-                            <h3 style="font-size: 1.1rem; margin-bottom: 2px;">${s.sport}</h3>
-                            <span class="skill-tag">${s.skillLevel}</span>
-                        </div>
-                    </div>
-                    <div class="squad-info-row"><i class="fas fa-map-marker-alt"></i> ${s.venue}, ${s.city}</div>
-                    <div class="squad-info-row"><i class="fas fa-calendar-alt"></i> ${new Date(s.datetime).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })}</div>
-                    <div class="squad-info-row"><i class="fas fa-user-edit"></i> Posted by ${s.postedByName}</div>
-                    ${s.message ? `<p style="font-size: 0.8rem; color: var(--text-secondary); font-style: italic; border-left: 2px solid var(--accent-primary); padding-left: 10px; margin-top: 5px;">"${s.message}"</p>` : ''}
+                    <h3 style="margin: 10px 0 5px 0; font-size: 1.1rem;">${s.title}</h3>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 15px;">${s.venue}, ${s.city}</p>
                     
-                    <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid var(--glass-border);">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                            <span style="font-size: 0.8rem; font-weight: 600;">Players Needed: <span style="color: var(--accent-primary);">${s.playersNeeded}</span></span>
-                            <div class="joiner-dots">
-                                ${s.joiners?.slice(0, 3).map(() => `<div class="joiner-dot"><i class="fas fa-user"></i></div>`).join('')}
-                                ${s.joiners?.length > 3 ? `<div class="joiner-dot">+${s.joiners.length - 3}</div>` : ''}
+                    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; margin-bottom: 5px;">
+                        <span>Progress: ${s.paid}/${s.count} Paid</span>
+                        <span style="color: var(--accent-primary);">LKR ${s.total}</span>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" style="width: ${progress}%; ${s.statusClass==='settled'?'background:#10b981':''}"></div>
+                    </div>
+
+                    <div style="margin: 15px 0;">
+                        ${s.players.map(p => `
+                            <div class="payment-status-row">
+                                <span style="color: ${p.p ? 'white' : 'var(--text-secondary)'}">${p.n}</span>
+                                <span class="${p.p ? 'paid-badge' : 'pending-badge'}">${p.p ? '✅ Paid' : '⏳ Pending'}</span>
                             </div>
-                        </div>
-                        <button class="btn ${hasJoined ? 'btn-outline' : 'btn-primary'}" 
-                                style="width: 100%; padding: 10px;" 
-                                onclick="joinSquad('${s.id}')" 
-                                ${isFull || hasJoined ? 'disabled' : ''}>
-                            ${hasJoined ? '<i class="fas fa-check"></i> Joined' : isFull ? 'Full' : 'Join Squad'}
-                        </button>
+                        `).join('')}
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: auto; padding-top: 15px; border-top: 1px solid var(--glass-border);">
+                        ${s.statusClass === 'settled' ? `
+                            <button class="btn btn-outline" style="width: 100%;" onclick="openReceipt('${s.id}')">View Receipt</button>
+                        ` : `
+                            <button class="btn btn-outline" style="flex: 1; font-size: 0.75rem; padding: 8px;" onclick="showToast('Reminder sent! 🔔')">
+                                <i class="fas fa-bell"></i> Remind
+                            </button>
+                            <button class="btn btn-outline" style="flex: 1; font-size: 0.75rem; padding: 8px; border-color: #10b981; color: #10b981;" onclick="settleSplit('${s.id}')">
+                                Settle
+                            </button>
+                        `}
                     </div>
                 </div>
-            `;
+            `}).join('');
         }
 
-        async function joinSquad(slotId) {
-            const user = window.SS_FB?.auth?.currentUser;
-            if (!user) { showToast("Please login to join!"); return; }
+        // Section 3: Invited Splits Rendering
+        function renderInvitedSplits() {
+            const grid = document.getElementById('invited-splits-grid');
+            const demos = [
+                { id: 'si1', title: 'Colombo Padel Crew — Court Booking', invitedBy: 'Kavin R.', initial: 'KR', color: '#06b6d4', sport: 'Padel', emoji: '🎾', venue: 'Ace Padel Club', city: 'Colombo', date: 'This Saturday, 7:00 AM', share: 1125, total: 4500, count: 4, paid: false },
+                { id: 'si2', title: 'Kandy Futsal — Weekend Match', invitedBy: 'Thisara M.', initial: 'TM', color: '#f97316', sport: 'Futsal', emoji: '⚽', venue: 'Arena Futsal Park', city: 'Kandy', date: 'This Sunday, 5:00 PM', share: 1000, total: 6000, count: 6, paid: true }
+            ];
 
-            try {
-                const { db, methods } = window.SS_FB;
-                const slotRef = methods.doc(db, "squad_slots", slotId);
-                
-                showToast("📡 Joining squad...");
-                
-                await methods.updateDoc(slotRef, {
-                    joiners: methods.arrayUnion({ uid: user.uid, name: user.displayName || "Member" }),
-                    playersNeeded: window.SS_FB.methods.increment ? window.SS_FB.methods.increment(-1) : 0 // Fallback if increment not available
-                });
-
-                // Check if full (this is a bit racey but fine for demo)
-                const slots = window.allSquadSlots || [];
-                const slot = slots.find(s => s.id === slotId);
-                if (slot && slot.playersNeeded <= 1) {
-                    await methods.updateDoc(slotRef, { status: "full", playersNeeded: 0 });
-                }
-
-                showToast("🎉 You've joined the squad!");
-            } catch (err) {
-                console.error("Join error:", err);
-                showToast("❌ Failed to join squad.");
-            }
-        }
-
-        // Add increment if missing (Wait, I should have added it to firebase-config.js)
-        // I'll manually handle the decrement if increment isn't there.
-
-        function renderMySquads() {
-            const user = window.SS_FB?.auth?.currentUser;
-            if (!user) return;
-            const slots = window.allSquadSlots || [];
-
-            const posted = slots.filter(s => s.postedBy === user.uid);
-            const joined = slots.filter(s => s.joiners?.some(j => j.uid === user.uid));
-
-            const postedGrid = document.getElementById('my-posted-squads');
-            const joinedGrid = document.getElementById('my-joined-squads');
-
-            postedGrid.innerHTML = posted.length ? posted.map(s => createSquadCard(s, user)).join('') : '<p style="color: var(--text-secondary);">You haven\'t posted any squads yet.</p>';
-            joinedGrid.innerHTML = joined.length ? joined.map(s => createSquadCard(s, user)).join('') : '<p style="color: var(--text-secondary);">You haven\'t joined any squads yet.</p>';
-        }
-
-        // --- Health & Fitness Logic (Health-Informed Booking) ---
-        async function calculateHealth(e) {
-            e.preventDefault();
-            const age = parseFloat(document.getElementById('health-age').value);
-            const weight = parseFloat(document.getElementById('health-weight').value);
-            const heightCm = parseFloat(document.getElementById('health-height').value);
-            
-            if(!age || !weight || !heightCm) return;
-            
-            // BMI Calculation
-            const heightM = heightCm / 100;
-            const bmi = (weight / (heightM * heightM)).toFixed(1);
-            
-            let bmiCategory = "Normal";
-            if(bmi < 18.5) bmiCategory = "Underweight";
-            else if(bmi >= 25 && bmi < 29.9) bmiCategory = "Overweight";
-            else if(bmi >= 30) bmiCategory = "Obese";
-
-            // Cardio Health target Zones
-            const maxHeartRate = 220 - age;
-            const zoneLow = Math.round(maxHeartRate * 0.6);
-            const zoneHigh = Math.round(maxHeartRate * 0.85);
-
-            // Recommendations Logic
-            let recSport = "Tennis or Swimming";
-            if (bmiCategory === "Obese" || bmiCategory === "Overweight") {
-                recSport = "Swimming, Walking, or Cycling (Low-impact)";
-            } else if (age < 30 && bmiCategory === "Normal") {
-                recSport = "Basketball, Football, or Training";
-            } else if (age >= 50) {
-                recSport = "Badminton, Yoga, or Brisk Walking";
-            }
-
-            // Save to Firebase
-            const record = {
-                age, weight, height: heightCm, bmi, category: bmiCategory, 
-                zone: `${zoneLow}-${zoneHigh}`, sport: recSport,
-                timestamp: Date.now()
-            };
-
-            if (window.SS_FB && window.SS_FB.auth.currentUser) {
-                try {
-                    const userId = window.SS_FB.auth.currentUser.uid;
-                    await window.SS_FB.methods.addDoc(window.SS_FB.methods.collection(window.SS_FB.db, `users/${userId}/health_history`), record);
-                    showToast("✅ Health data saved to your profile.");
-                    loadHealthHistory();
-                } catch (err) {
-                    console.error("Save error:", err);
-                }
-            }
-
-            // Bind to UI
-            const resultsDiv = document.getElementById('health-results');
-            const outText = document.getElementById('health-output-text');
-            
-            outText.innerHTML = `Your BMI is <strong style="color: var(--accent-secondary);">${bmi} (${bmiCategory})</strong>.<br>
-            Your recommended Cardio Training Zone is <strong>${zoneLow} - ${zoneHigh} BPM</strong>.<br><br>
-            Based on your profile, we recommend: <strong style="color: var(--accent-primary);">${recSport}</strong>.`;
-            
-            resultsDiv.style.display = 'block';
-        }
-
-        async function loadHealthHistory() {
-            const container = document.getElementById('health-history-list');
-            if (!window.SS_FB || !window.SS_FB.auth.currentUser) {
-                container.innerHTML = '<div style="text-align: center; color: var(--text-secondary); padding: 2rem;">Please sign in to see your history.</div>';
-                return;
-            }
-
-            try {
-                const userId = window.SS_FB.auth.currentUser.uid;
-                const q = window.SS_FB.methods.query(
-                    window.SS_FB.methods.collection(window.SS_FB.db, `users/${userId}/health_history`),
-                    window.SS_FB.methods.where("timestamp", ">", 0) // Dummy to trigger sort if needed or just get all
-                );
-                
-                const snap = await window.SS_FB.methods.getDocs(q);
-                let history = [];
-                snap.forEach(doc => history.push(doc.data()));
-                history.sort((a,b) => b.timestamp - a.timestamp);
-
-                if (history.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; color: var(--text-secondary); padding: 2rem;">No health records yet. Take your first check!</div>';
-                    return;
-                }
-
-                container.innerHTML = history.map(h => `
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+            grid.innerHTML = demos.map(s => `
+                <div class="glass squad-card fade-up visible" id="invited-split-${s.id}">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem;">
+                        <div class="avatar-circle" style="background: ${s.color}; margin: 0;">${s.initial}</div>
                         <div>
-                            <div style="font-weight: 600; font-size: 1rem;">BMI: ${h.bmi} (${h.category})</div>
-                            <div style="font-size: 0.8rem; color: var(--text-secondary);">${new Date(h.timestamp).toLocaleString()}</div>
+                            <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0;">Invited by</p>
+                            <p style="font-size: 0.85rem; font-weight: 700; margin: 0;">${s.invitedBy}</p>
                         </div>
-                        <div style="text-align: right;">
-                            <div style="font-size: 0.85rem; color: var(--accent-primary); font-weight: 600;">Weight: ${h.weight}kg</div>
-                            <div style="font-size: 0.75rem; color: var(--text-secondary);">Age: ${h.age} | Zone: ${h.zone}</div>
-                        </div>
+                        <span style="margin-left: auto; font-size: 1.5rem;">${s.emoji}</span>
                     </div>
-                `).join('');
+                    
+                    <h3 style="font-size: 1rem; margin-bottom: 15px;">${s.title}</h3>
+                    
+                    <div style="background: rgba(255,255,255,0.02); padding: 15px; border-radius: 12px; margin-bottom: 1.5rem;">
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 5px;">Your Share</p>
+                        <p style="font-size: 1.4rem; font-weight: 800; color: white;">LKR ${s.share}</p>
+                        <p style="font-size: 0.7rem; color: var(--text-secondary);">Split of LKR ${s.total} among ${s.count} players</p>
+                    </div>
 
-            } catch (err) {
-                console.error("Load history error:", err);
+                    <div style="margin-bottom: 1.5rem;">
+                        <span class="status-badge ${s.paid ? 'active' : 'waiting'}" id="invited-badge-${s.id}">
+                            ${s.paid ? '✅ Already Paid' : '⏳ Payment Pending'}
+                        </span>
+                    </div>
+
+                    ${s.paid ? `
+                        <button class="btn btn-outline" style="width: 100%;" onclick="showToast('Showing split breakdown...')">View Split Details</button>
+                    ` : `
+                        <button class="btn btn-primary" style="width: 100%;" id="pay-btn-${s.id}" onclick="openPaymentModal('${s.id}', ${s.share})">Pay My Share</button>
+                    `}
+                </div>
+            `).join('');
+        }
+
+        function settleSplit(id) {
+            const el = document.getElementById(`active-split-${id}`);
+            if(el) {
+                el.classList.add('card-fade-out');
+                setTimeout(() => {
+                    el.remove();
+                    showToast("Split marked as settled! ✅");
+                }, 400);
             }
         }
 
-        async function downloadHealthPDF() {
+        // Payment Modal Logic
+        let activePaymentSplitId = null;
+        let activePaymentAmount = 0;
+        let currentPayMethod = 'card';
+
+        function openPaymentModal(id, amount) {
+            activePaymentSplitId = id;
+            activePaymentAmount = amount;
+            document.getElementById('payment-amount-display').innerText = `LKR ${amount}`;
+            document.getElementById('payment-modal').style.display = 'flex';
+        }
+
+        function closePaymentModal() { document.getElementById('payment-modal').style.display = 'none'; }
+
+        function setPayMethod(method) {
+            currentPayMethod = method;
+            document.getElementById('pay-method-card').classList.toggle('active', method === 'card');
+            document.getElementById('pay-method-later').classList.toggle('active', method === 'later');
+            document.getElementById('card-fields-wrap').style.display = method === 'card' ? 'block' : 'none';
+            document.getElementById('pay-later-wrap').style.display = method === 'later' ? 'block' : 'none';
+        }
+
+        function confirmSplitPayment() {
+            showToast("📡 Processing...");
+            setTimeout(() => {
+                closePaymentModal();
+                showToast(`Payment confirmed! LKR ${activePaymentAmount} marked as paid 🎉`);
+                
+                const badge = document.getElementById(`invited-badge-${activePaymentSplitId}`);
+                const btn = document.getElementById(`pay-btn-${activePaymentSplitId}`);
+                if(badge) {
+                    badge.innerHTML = '✅ Paid';
+                    badge.classList.replace('waiting', 'active');
+                }
+                if(btn) {
+                    btn.innerHTML = '✅ Paid';
+                    btn.disabled = true;
+                    btn.classList.replace('btn-primary', 'btn-outline');
+                }
+            }, 1500);
+        }
+
+        // Receipt Logic
+        let activeReceiptId = null;
+        function openReceipt(id) {
+            activeReceiptId = id;
+            const body = document.getElementById('receipt-body');
+            body.innerHTML = `
+                <tr><td style="text-align:left">You (Organizer)</td><td style="text-align:right">LKR 800</td></tr>
+                <tr><td style="text-align:left">Sahan P.</td><td style="text-align:right">LKR 800</td></tr>
+                <tr><td style="text-align:left">Dilini R.</td><td style="text-align:right">LKR 800</td></tr>
+                <tr><td style="text-align:left">Arjun K.</td><td style="text-align:right">LKR 800</td></tr>
+            `;
+            document.getElementById('receipt-modal').style.display = 'flex';
+        }
+        function closeReceiptModal() { document.getElementById('receipt-modal').style.display = 'none'; }
+
+        async function downloadReceiptPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            // Fetch All History First
-            if (!window.SS_FB || !window.SS_FB.auth.currentUser) {
-                showToast("Please sign in to generate report.");
-                return;
-            }
-
-            try {
-                const userId = window.SS_FB.auth.currentUser.uid;
-                const q = window.SS_FB.methods.query(
-                    window.SS_FB.methods.collection(window.SS_FB.db, `users/${userId}/health_history`)
-                );
-                const snap = await window.SS_FB.methods.getDocs(q);
-                let history = [];
-                snap.forEach(doc => history.push(doc.data()));
-                history.sort((a,b) => b.timestamp - a.timestamp);
-
-                if(history.length === 0) {
-                    showToast("No health records found to export!");
-                    return;
-                }
-
-                // --- 🎨 Premium Letterhead ---
-                doc.setFillColor(10, 15, 29); // Dark Theme Blue
-                doc.rect(0, 0, 210, 50, 'F');
-                
-                // Add Gradient Bar
-                doc.setFillColor(139, 92, 246); // Purple
-                doc.rect(0, 48, 210, 2, 'F');
-
-                doc.setTextColor(255, 255, 255);
-                doc.setFont("helvetica", "bold");
-                doc.setFontSize(28);
-                doc.text("SportSphere", 20, 30);
-                doc.setFontSize(14);
-                doc.setFont("helvetica", "normal");
-                doc.text("ELITE PERFORMANCE ANALYTICS", 20, 40);
-
-                // --- 📄 Report Details ---
-                doc.setTextColor(10, 15, 29);
-                doc.setFontSize(20);
-                doc.setFont("helvetica", "bold");
-                doc.text("MAJOR HEALTH PROGRESSION REPORT", 20, 70);
-                
-                doc.setFontSize(10);
-                doc.setFont("helvetica", "italic");
-                doc.setTextColor(120, 120, 120);
-                doc.text(`REPORT ID: SS-${Date.now()}`, 140, 80);
-                doc.text(`GENERATED: ${new Date().toLocaleString()}`, 140, 85);
-
-                const current = history[0]; // Latest
-
-                // --- 👤 Profile Summary ---
-                doc.setFillColor(245, 245, 250);
-                doc.roundedRect(20, 95, 170, 40, 3, 3, 'F');
-                doc.setTextColor(10, 15, 29);
-                doc.setFontSize(12);
-                doc.setFont("helvetica", "bold");
-                doc.text("LATEST PROFILE SUMMARY:", 25, 105);
-                
-                doc.setFont("helvetica", "normal");
-                doc.text(`Current Weight: ${current.weight} kg`, 30, 115);
-                doc.text(`Current Height: ${current.height} cm`, 30, 125);
-                doc.text(`Latest BMI: ${current.bmi} (${current.category})`, 100, 115);
-                doc.text(`Cardio Zone: ${current.zone} BPM`, 100, 125);
-
-                // --- 📊 History Table ---
-                doc.setFont("helvetica", "bold");
-                doc.text("HISTORICAL HEALTH TRACKING:", 20, 150);
-                
-                const tableData = history.map(h => [
-                    new Date(h.timestamp).toLocaleDateString(),
-                    h.age,
-                    h.weight + "kg",
-                    h.bmi,
-                    h.category,
-                    h.zone + " BPM"
-                ]);
-
-                doc.autoTable({
-                    startY: 155,
-                    head: [['Date', 'Age', 'Weight', 'BMI', 'Status', 'Cardio Limit']],
-                    body: tableData,
-                    headStyles: { fillColor: [139, 92, 246], textColor: [255, 255, 255] },
-                    alternateRowStyles: { fillColor: [245, 245, 255] },
-                    margin: { left: 20, right: 20 }
-                });
-
-                // Recommendation Section
-                const finalY = doc.lastAutoTable.finalY + 15;
-                doc.setTextColor(139, 92, 246);
-                doc.setFontSize(14);
-                doc.setFont("helvetica", "bold");
-                doc.text("FINAL CLINICAL RECOMMENDATION:", 20, finalY);
-                doc.setTextColor(10, 15, 29);
-                doc.setFontSize(11);
-                doc.setFont("helvetica", "normal");
-                const splitRec = doc.splitTextToSize(`Based on your cumulative tracking, your ideal performance sports are: ${current.sport}. We recommend maintaining a training heart rate between ${current.zone} BPM for optimal results.`, 160);
-                doc.text(splitRec, 20, finalY + 10);
-
-                // Footer
-                doc.setFontSize(9);
-                doc.setTextColor(150, 150, 150);
-                doc.text("This is an automated system-generated report. Please consult a professional coach for rigorous training plans.", 20, 285);
-
-                doc.save(`SportSphere_Major_Report_${Date.now()}.pdf`);
-                showToast("✅ Major Health Report Downloaded!");
-
-            } catch (err) {
-                console.error("PDF History load error:", err);
-                showToast("❌ Failed to load history for PDF.");
-            }
-        }
-
-        // --- Memories System (Firebase Powered) ---
-        async function handleMemoryUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const isOffline = window.SS_MODE && window.SS_MODE.isOffline();
-
-            // --- OFFLINE MODE / LOCAL FALLBACK ---
-            if (isOffline || typeof window.SS_FB === 'undefined' || window.SS_FB.disabled) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const memories = JSON.parse(localStorage.getItem('ss_memories_offline') || "[]");
-                    memories.push({
-                        id: 'local-' + Date.now(),
-                        url: e.target.result, // Base64
-                        date: new Date().toLocaleDateString(),
-                        isLocal: true
-                    });
-                    localStorage.setItem('ss_memories_offline', JSON.stringify(memories));
-                    showToast("📁 Saved to Local Browser Storage!");
-                    renderMemories();
-                };
-                reader.readAsDataURL(file);
-                return;
-            }
-
-            // --- ONLINE MODE ---
-            const user = window.SS_FB.auth.currentUser;
-            if (!user) { showToast("Please login first!"); return; }
-
-            // Check if Firebase is configured (for online mode)
-            if (window.SS_FB.auth.app.options.apiKey === "YOUR_API_KEY") {
-                showToast("⚠️ Please configure Firebase API Keys in firebase-config.js first.");
-                return;
-            }
-
-            showToast("🚀 Uploading to Cloud...");
+            doc.setFontSize(22);
+            doc.text("SportSphere Payment Receipt", 20, 20);
+            doc.setFontSize(12);
+            doc.text(`Title: Morning Badminton — Smash Center`, 20, 35);
+            doc.text(`Venue: Smash Center, Colombo`, 20, 42);
+            doc.text(`Date: Tuesday, March 17, 2026`, 20, 49);
             
-            try {
-                const { storage, db, methods } = window.SS_FB;
-                const storageRef = methods.ref(storage, `memories/${user.uid}/${Date.now()}_${file.name}`);
-                
-                // 1. Upload to Firebase Storage
-                const snapshot = await methods.uploadBytes(storageRef, file);
-                const downloadURL = await methods.getDownloadURL(snapshot.ref);
-
-                // 2. Save to Firestore
-                await methods.addDoc(methods.collection(db, "memories"), {
-                    userId: user.uid,
-                    url: downloadURL,
-                    storagePath: storageRef.fullPath,
-                    date: new Date().toLocaleDateString(),
-                    createdAt: new Date()
-                });
-
-                showToast("✨ Memory saved to Cloud Storage!");
-                renderMemories();
-            } catch (error) {
-                console.error("Upload Error:", error);
-                showToast("❌ Upload failed. Check console.");
-            }
-        }
-
-        async function renderMemories() {
-            const grid = document.getElementById('memories-grid');
-            const user = window.SS_FB?.auth?.currentUser;
-            const isOffline = window.SS_MODE && window.SS_MODE.isOffline();
-
-            // Fallback to localStorage if in Offline mode or Firebase not ready
-            if (isOffline || !user || window.SS_FB.disabled) {
-                const keys = ['ss_memories_offline', 'ss_memories_v1', 'ss_memories'];
-                let allLocalMemories = [];
-                keys.forEach(key => {
-                    const saved = JSON.parse(localStorage.getItem(key) || "[]");
-                    allLocalMemories = [...allLocalMemories, ...saved];
-                });
-
-                if (allLocalMemories.length === 0) {
-                    grid.innerHTML = `<div class="no-results" style="grid-column: 1/-1;"><p>${isOffline ? "No local memories in this browser yet." : "No local memories. (Configure Firebase for Cloud Storage)"}</p></div>`;
-                    return;
-                }
-                grid.innerHTML = allLocalMemories.map(m => createMemoryCard(m)).join("");
-                return;
-            }
-
-            // Real Firebase Fetch
-            const { db, methods } = window.SS_FB;
-            const q = methods.query(methods.collection(db, "memories"), methods.where("userId", "==", user.uid));
-            const querySnapshot = await methods.getDocs(q);
-            
-            let html = "";
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                const m = { ...data, id: doc.id };
-                html += createMemoryCard(m, true);
+            const players = [["You (Organizer)", "LKR 800"], ["Sahan P.", "LKR 800"], ["Dilini R.", "LKR 800"], ["Arjun K.", "LKR 800"]];
+            doc.autoTable({
+                startY: 60,
+                head: [['Player', 'Amount Paid']],
+                body: players,
+                theme: 'striped',
+                headStyles: { fillColor: [139, 92, 246] }
             });
             
-            grid.innerHTML = html || `<div class="no-results" style="grid-column: 1/-1;"><p>No memories in your cloud account yet.</p></div>`;
+            doc.text("Total Settled: LKR 3,200", 140, doc.lastAutoTable.finalY + 15);
+            doc.setFontSize(10);
+            doc.text("All payments settled via SportSphere Cost Split", 20, doc.lastAutoTable.finalY + 30);
+            
+            doc.save("SportSphere_Receipt_Badminton.pdf");
+            showToast("Receipt downloaded! 📄");
         }
 
-                function createMemoryCard(m, isCloud = false) {
-            return `
-                <div class="memory-card fade-up visible">
-                    <img src="${m.url}" class="memory-image" alt="Sports Memory">
-                    <div class="memory-overlay">
-                        <div class="memory-date">
-                            <i class="fas fa-calendar-alt"></i>
-                            ${m.date}
-                        </div>
-                        <h4 style="color: white; margin: 0; font-size: 1rem;">Game Moment</h4>
+        // Calculator Widget Logic
+        function runCalculator() {
+            const cost = parseFloat(document.getElementById('calc-cost').value) || 0;
+            const players = parseInt(document.getElementById('calc-players').value) || 1;
+            const method = document.getElementById('calc-method').value;
+            const output = document.getElementById('calc-output');
+
+            if(method === 'equal') {
+                const per = cost / players;
+                output.innerHTML = `
+                    <div style="text-align:center;">
+                        <p style="font-size:0.8rem; color:var(--text-secondary);">Each player pays</p>
+                        <p style="font-size:1.8rem; font-weight:800; color:var(--accent-primary);">LKR ${per.toLocaleString(undefined, {minimumFractionDigits:2})}</p>
                     </div>
-                    <div class="memory-actions">
-                        <button class="action-btn view" onclick="window.open('${m.url}', '_blank')" title="View Full Image">
-                            <i class="fas fa-expand-alt"></i>
-                        </button>
-                        <button class="action-btn download" onclick="downloadImage('${m.url}', 'SportSphere_Memory_${m.date.replace(/\//g, '-')}')" title="Download Image">
-                            <i class="fas fa-download"></i>
-                        </button>
-                        <button class="action-btn delete" onclick="${isCloud ? `deleteCloudMemory('${m.id}', '${m.storagePath || ''}')` : `deleteMemory('${m.id}')`}" title="Delete Memory">
-                            <i class="fas fa-trash-alt"></i>
+                `;
+            } else if(method === 'percent') {
+                let html = '<div style="display:flex; flex-direction:column; gap:10px;">';
+                for(let i=1; i<=Math.min(players, 6); i++) {
+                    const share = (100 / players).toFixed(0);
+                    html += `
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <span style="font-size:0.8rem; min-width:60px;">Player ${i}</span>
+                            <input type="range" style="flex:1; accent-color:var(--accent-primary);" value="${share}">
+                            <span style="font-size:0.8rem; min-width:40px; font-weight:700;">${share}%</span>
+                        </div>
+                    `;
+                }
+                html += '</div><p style="font-size:0.75rem; color:var(--text-secondary); margin-top:10px; text-align:center;">Adjust sliders to split by % (Max 6 players shown)</p>';
+                output.innerHTML = html;
+            } else {
+                output.innerHTML = `
+                    <div style="text-align:center;">
+                        <p style="font-size:0.8rem; color:var(--text-secondary);">Total Allocated</p>
+                        <p style="font-size:1.4rem; font-weight:800; color:#10b981;">LKR ${cost.toLocaleString()}</p>
+                        <p style="font-size:0.7rem; color:var(--text-secondary);">Remaining: LKR 0</p>
+                    </div>
+                `;
+            }
+        }
+
+        // --- Squad Finder Logic ---
+        const DEMO_SLOTS = [
+            { id: 'd-slot1', sport: 'Padel', venue: 'Ace Padel Club', city: 'Colombo', datetime: 'This Saturday, 7:00 AM', playersNeeded: 2, skillLevel: 'Intermediate', postedByName: 'Kavin R.', message: 'Looking for 2 more for a friendly match. Good vibes only 😄', emoji: '🎾' },
+            { id: 'd-slot2', sport: 'Futsal', venue: 'Arena Futsal Park', city: 'Kandy', datetime: 'This Sunday, 5:00 PM', playersNeeded: 3, skillLevel: 'Beginner', postedByName: 'Thisara M.', message: 'Casual game, beginners very welcome. We just play for fun!', emoji: '🥅' },
+            { id: 'd-slot3', sport: 'Badminton', venue: 'Smash Badminton Center', city: 'Colombo', datetime: 'Tomorrow, 6:30 AM', playersNeeded: 0, skillLevel: 'Advanced', postedByName: 'Anika S.', message: 'Need one more serious player. Must be advanced level.', emoji: '🏸' },
+            { id: 'd-slot4', sport: 'Basketball', venue: 'Hoop City', city: 'Negombo', datetime: 'Monday, 4:00 PM', playersNeeded: 4, skillLevel: 'Intermediate', postedByName: 'Ruhan J.', message: '3v3 game. Come through if you\'re around Negombo!', emoji: '🏀' },
+            { id: 'd-slot5', sport: 'Cricket', venue: 'Galle Grounds', city: 'Galle', datetime: 'Next Saturday, 8:00 AM', playersNeeded: 5, skillLevel: 'Beginner', postedByName: 'Dilshan P.', message: 'Friendly weekend cricket. All ages welcome 🏏', emoji: '🏏' }
+        ];
+
+        const DEMO_ROOMS = [
+            { id: 'colombo-padel-crew', name: "Colombo Padel Crew 🎾", sport: "Padel", city: "Colombo", memberCount: 12, description: "Weekly padel sessions every Saturday morning.", emoji: "🎾", lastMsg: "Kavin R: The more the merrier 🎾", lastTime: "4m ago" },
+            { id: 'kandy-futsal-kings', name: "Kandy Futsal Kings ⚽", sport: "Futsal", city: "Kandy", memberCount: 8, description: "Competitive futsal matches.", emoji: "⚽", lastMsg: "Thisara M: See you Sunday ⚽", lastTime: "12m ago" },
+            { id: 'galle-beach-volleyball', name: "Galle Beach Volleyball 🏐", sport: "Volleyball", city: "Galle", memberCount: 15, description: "Casual beach volleyball weekends.", emoji: "🏐", lastMsg: "Dilshan P: Let's gooo!", lastTime: "22m ago" },
+            { id: 'colombo-badminton-club', name: "Colombo Badminton Club 🏸", sport: "Badminton", city: "Colombo", memberCount: 20, description: "Daily morning badminton club.", emoji: "🏸", lastMsg: "Ruhan J: First game starts now", lastTime: "1h ago" }
+        ];
+
+        let chatUnsubscribe = null, typingUnsubscribe = null, activeChatRoomId = null, typingTimeout = null;
+
+        function initSquadFinder() { renderDemoOpenSlots(); }
+        function switchSquadSubTab(sub) {
+            document.getElementById('squad-feed-view').style.display = sub === 'feed' ? 'block' : 'none';
+            document.getElementById('squad-mine-view').style.display = sub === 'mine' ? 'block' : 'none';
+            document.getElementById('btn-squad-feed').classList.toggle('active', sub === 'feed');
+            document.getElementById('btn-squad-mine').classList.toggle('active', sub === 'mine');
+            if (sub === 'feed') renderDemoOpenSlots();
+            if (sub === 'mine') renderMySquads();
+        }
+
+        function switchMySquadsSubTab(sub) {
+            document.getElementById('my-posted-squads-view').style.display = sub === 'posted' ? 'block' : 'none';
+            document.getElementById('my-joined-squads-view').style.display = sub === 'joined' ? 'block' : 'none';
+            document.getElementById('pill-posted').classList.toggle('active', sub === 'posted');
+            document.getElementById('pill-joined').classList.toggle('active', sub === 'joined');
+        }
+
+        function renderMySquads() {
+            renderPostedSquads();
+            renderJoinedSquads();
+        }
+
+        function renderPostedSquads() {
+            const grid = document.getElementById('my-posted-squads-grid');
+            if(!grid) return;
+
+            const demoPosted = [
+                { id: 'm-p1', sport: 'Padel', emoji: '🎾', venue: 'Ace Padel Club', city: 'Colombo', datetime: 'This Saturday, 7:00 AM', needed: 2, joined: 1, status: 'Active 🟢', statusClass: 'active', joiners: [{name: 'Anika S.', initial: 'AS', color: '#06b6d4', time: '5 min ago'}] },
+                { id: 'm-p2', sport: 'Badminton', emoji: '🏸', venue: 'Smash Badminton Center', city: 'Colombo', datetime: 'Tomorrow, 6:30 AM', needed: 1, joined: 0, status: 'Waiting 🟡', statusClass: 'waiting', joiners: [] },
+                { id: 'm-p3', sport: 'Basketball', emoji: '🏀', venue: 'Hoop City', city: 'Negombo', datetime: 'Monday, 4:00 PM', needed: 4, joined: 4, status: 'Full 🔵', statusClass: 'full', joiners: [{name: 'Ruhan J.', initial: 'RJ', color: '#f97316'}, {name: 'Thisara M.', initial: 'TM', color: '#10b981'}, {name: 'Kavin R.', initial: 'KR', color: '#3b82f6'}, {name: 'Dilshan P.', initial: 'DP', color: '#ef4444'}] }
+            ];
+
+            grid.innerHTML = demoPosted.map((s, index) => `
+                <div class="glass squad-card fade-up visible" style="animation-delay: ${index * 0.1}s" id="my-card-${s.id}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div style="font-size: 1.8rem;">${s.emoji}</div>
+                        <span class="status-badge ${s.statusClass}">${s.status}</span>
+                    </div>
+                    <div>
+                        <h3 style="margin: 5px 0 2px 0;">${s.sport}</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);"><i class="fas fa-map-marker-alt"></i> ${s.venue}, ${s.city}</p>
+                    </div>
+                    <div style="font-weight: 700; color: white; margin: 5px 0;">
+                        <i class="fas fa-calendar-alt" style="color: var(--accent-primary); margin-right: 8px;"></i>${s.datetime}
+                    </div>
+                    
+                    <div style="margin-top: 10px; padding-top: 15px; border-top: 1px solid var(--glass-border);">
+                        <p style="font-size: 0.8rem; font-weight: 600; margin-bottom: 10px;">
+                            Joiners (${s.joined}/${s.needed}):
+                        </p>
+                        ${s.joiners.length > 0 ? `
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                ${s.id === 'm-p3' ? `
+                                    <div class="avatar-stack">
+                                        ${s.joiners.map(j => `<div class="avatar-circle" style="background: ${j.color}" title="${j.name}">${j.initial}</div>`).join('')}
+                                    </div>
+                                    <p style="font-size: 0.75rem; color: #8b5cf6; font-weight: 600; margin-top: 5px;">🎉 Your squad is complete! Time to play.</p>
+                                ` : `
+                                    ${s.joiners.map(j => `
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <div class="avatar-circle" style="background: ${j.color}; margin: 0;">${j.initial}</div>
+                                            <span style="font-size: 0.8rem;">${j.name} <span style="color: var(--text-secondary); font-size: 0.7rem;">• Joined ${j.time}</span></span>
+                                        </div>
+                                    `).join('')}
+                                `}
+                            </div>
+                        ` : `
+                            <p style="font-size: 0.75rem; color: var(--text-secondary); font-style: italic;">No one has joined yet. Share your slot!</p>
+                            <button class="btn btn-outline" style="padding: 4px 10px; font-size: 0.7rem; margin-top: 8px; border-style: dashed;" onclick="showToast('Slot link copied to clipboard! 🔗')">
+                                <i class="fas fa-link"></i> Copy Slot Link
+                            </button>
+                        `}
+                    </div>
+
+                    <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+                        <button class="btn btn-outline" style="flex: 1; font-size: 0.8rem; padding: 8px;" onclick="showToast('Edit feature coming soon! ✏️')">Edit Slot</button>
+                        ${s.joined < s.needed ? `<button class="btn btn-cancel-squad" style="flex: 1; font-size: 0.8rem; padding: 8px;" onclick="removeMySquadCard('my-card-${s.id}', 'Slot cancelled successfully')">Cancel Slot</button>` : `<button class="btn btn-outline" style="flex: 1; font-size: 0.8rem; padding: 8px;">View Details</button>`}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderJoinedSquads() {
+            const grid = document.getElementById('my-joined-squads-grid');
+            if(!grid) return;
+
+            const demoJoined = [
+                { id: 'm-j1', sport: 'Futsal', emoji: '⚽', venue: 'Arena Futsal Park', city: 'Kandy', datetime: 'This Sunday, 5:00 PM', organizer: 'Thisara M.', orgInitial: 'TM', orgColor: '#f97316', status: 'Confirmed ✅', statusClass: 'confirmed', members: 3 },
+                { id: 'm-j2', sport: 'Cricket', emoji: '🏏', venue: 'Galle Grounds', city: 'Galle', datetime: 'Next Saturday, 8:00 AM', organizer: 'Dilshan P.', orgInitial: 'DP', orgColor: '#3b82f6', status: 'Waiting 🟡', statusClass: 'waiting', members: 2, needed: 3 },
+                { id: 'm-j3', sport: 'Volleyball', emoji: '🏐', venue: 'Galle Beach Court', city: 'Galle', datetime: 'This Sunday, 7:00 AM', organizer: 'Sanduni R.', orgInitial: 'SR', orgColor: '#ec4899', status: 'Full 🔵', statusClass: 'full', members: 6 }
+            ];
+
+            grid.innerHTML = demoJoined.map((s, index) => `
+                <div class="glass squad-card fade-up visible" style="animation-delay: ${index * 0.1}s" id="joined-card-${s.id}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                        <div style="font-size: 1.8rem;">${s.emoji}</div>
+                        <span class="status-badge ${s.statusClass}">${s.status}</span>
+                    </div>
+                    <div>
+                        <h3 style="margin: 5px 0 2px 0;">${s.sport}</h3>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);"><i class="fas fa-map-marker-alt"></i> ${s.venue}, ${s.city}</p>
+                    </div>
+                    <div style="font-weight: 700; color: white; margin: 5px 0;">
+                        <i class="fas fa-calendar-alt" style="color: var(--accent-primary); margin-right: 8px;"></i>${s.datetime}
+                    </div>
+
+                    <div style="margin-top: 10px; padding-top: 15px; border-top: 1px solid var(--glass-border);">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+                            <div class="avatar-circle" style="background: ${s.orgColor}; margin: 0;">${s.orgInitial}</div>
+                            <span style="font-size: 0.8rem; color: var(--text-secondary);">${s.organizer} is organizing</span>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div class="avatar-stack">
+                                <div class="avatar-circle" style="background: var(--accent-primary)">Y</div>
+                                ${Array(s.members - 1).fill(0).map(() => `<div class="avatar-circle" style="background: #4b5563"><i class="fas fa-user" style="font-size: 0.5rem"></i></div>`).join('')}
+                            </div>
+                            <span style="font-size: 0.75rem; color: var(--text-secondary);">${s.needed ? `${s.needed} more needed` : ''}</span>
+                        </div>
+                        ${s.statusClass === 'full' ? `<p style="font-size: 0.75rem; color: #8b5cf6; font-weight: 600; margin-top: 10px;">🎉 Squad is full! See you on the court.</p>` : ''}
+                    </div>
+
+                    <button class="btn btn-leave-squad" style="width: 100%; font-size: 0.8rem; padding: 8px; margin-top: 1.5rem;" 
+                            onclick="removeMySquadCard('joined-card-${s.id}', 'You have left the squad')"
+                            ${s.statusClass === 'full' ? `title="Leaving a full squad may affect other players"` : ''}>
+                        Leave Squad
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeMySquadCard(cardId, message) {
+            const card = document.getElementById(cardId);
+            if(card) {
+                card.classList.add('card-fade-out');
+                setTimeout(() => {
+                    card.remove();
+                    showToast(message);
+                    // Check if grid is empty
+                    const grids = ['my-posted-squads-grid', 'my-joined-squads-grid'];
+                    grids.forEach(gid => {
+                        const g = document.getElementById(gid);
+                        if(g && g.children.length === 0) {
+                            g.innerHTML = `<p style="color: var(--text-secondary); text-align: center; padding: 2rem; grid-column: 1/-1;">No squads found here.</p>`;
+                        }
+                    });
+                }, 400);
+            }
+        }
+
+        function renderDemoOpenSlots() {
+            const grid = document.getElementById('squad-grid');
+            if(!grid) return;
+            const skillColors = { 'Beginner': '#10b981', 'Intermediate': '#f59e0b', 'Advanced': '#ef4444' };
+            grid.innerHTML = DEMO_SLOTS.map(s => `
+                <div class="glass squad-card fade-up visible">
+                    <div class="squad-badge" style="background: ${s.playersNeeded === 0 ? 'rgba(239, 68, 68, 0.1)' : 'rgba(16, 185, 129, 0.1)'}; color: ${s.playersNeeded === 0 ? '#ef4444' : '#10b981'}">
+                        ${s.playersNeeded === 0 ? 'Full' : 'Open Slot'}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="squad-sport-icon">${s.emoji}</div>
+                        <div>
+                            <h3 style="font-size: 1.1rem; margin-bottom: 2px;">${s.sport}</h3>
+                            <span class="skill-tag" style="border-color: ${skillColors[s.skillLevel]}; color: ${skillColors[s.skillLevel]}">${s.skillLevel}</span>
+                        </div>
+                    </div>
+                    <div class="squad-info-row"><i class="fas fa-map-marker-alt"></i> ${s.venue}, ${s.city}</div>
+                    <div class="squad-info-row"><i class="fas fa-calendar-alt"></i> ${s.datetime}</div>
+                    <div class="squad-info-row"><i class="fas fa-user-edit"></i> Posted by ${s.postedByName}</div>
+                    <p style="font-size: 0.8rem; color: var(--text-secondary); font-style: italic; border-left: 2px solid var(--accent-primary); padding-left: 10px;">"${s.message}"</p>
+                    <div style="margin-top: auto; padding-top: 15px; border-top: 1px solid var(--glass-border);">
+                        <div style="margin-bottom: 10px; font-size: 0.8rem; font-weight:600;">
+                            <i class="fas fa-user" style="color: var(--accent-primary); margin-right: 5px;"></i>
+                            <span id="count-${s.id}">${s.playersNeeded}</span> Needed
+                        </div>
+                        <button class="btn ${s.playersNeeded === 0 ? 'btn-outline' : 'btn-primary'}" 
+                                style="width: 100%;" onclick="joinDemoSquad('${s.id}', '${s.postedByName}')"
+                                ${s.playersNeeded === 0 ? 'disabled' : ''} id="btn-${s.id}">
+                            ${s.playersNeeded === 0 ? 'Full' : 'Join Squad'}
                         </button>
                     </div>
                 </div>
-            `;
+            `).join('');
         }
 
-        async function downloadImage(url, filename) {
-            try {
-                showToast("⏳ Starting Secure Download...");
-                const response = await fetch(url);
-                if (!response.ok) throw new Error('Network error');
-                
-                const blob = await response.blob();
-                const blobUrl = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = blobUrl;
-                
-                // Try to get extension from blob type
-                const ext = blob.type.split('/')[1] || 'jpg';
-                link.download = `${filename}.${ext}`;
-                
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(blobUrl);
-                showToast("📥 Download Complete!");
-            } catch (error) {
-                console.warn("CORS/Security limit hit, falling back to new tab:", error);
-                showToast("↗️ Opening to Save: Right-click & 'Save As' in the new tab");
-                setTimeout(() => {
-                    window.open(url, '_blank');
-                }, 1000);
+        function joinDemoSquad(id, name) {
+            const countEl = document.getElementById(`count-${id}`), btnEl = document.getElementById(`btn-${id}`);
+            let count = parseInt(countEl.innerText);
+            if (count > 0) {
+                count--; countEl.innerText = count;
+                btnEl.innerText = "Joined ✓"; btnEl.disabled = true;
+                btnEl.classList.replace('btn-primary', 'btn-outline');
+                showToast(`You joined ${name}'s squad!`);
+                if (count === 0) btnEl.innerText = "Full";
             }
         }
 
-        async function deleteCloudMemory(id, path) {
-            if(!confirm("Are you sure you want to delete this memory from the cloud? This cannot be undone.")) return;
-            
-            showToast("🗑️ Deleting from Cloud...");
-            try {
-                const { db, storage, methods } = window.SS_FB;
-                
-                // 1. Delete Firestore Document
-                await methods.deleteDoc(methods.doc(db, "memories", id));
-                
-                // 2. Delete Storage Object if path exists
-                if (path) {
-                    const storageRef = methods.ref(storage, path);
-                    await methods.deleteObject(storageRef);
-                }
-                
-                showToast("✅ Memory deleted successfully.");
-                renderMemories();
-            } catch (error) {
-                console.error("Delete Error:", error);
-                showToast("❌ Delete failed. Check console.");
-            }
+        async function initChatRooms() {
+            if(!window.SS_FB) return;
+            const { db, methods } = window.SS_FB;
+            for (const room of DEMO_ROOMS) await methods.setDoc(methods.doc(db, "squad_chat_rooms", room.id), room, { merge: true });
+            const grid = document.getElementById('chat-rooms-grid');
+            if(grid) grid.innerHTML = DEMO_ROOMS.map(r => `
+                <div class="glass chat-room-card fade-up visible" onclick="openChatRoom('${r.id}')">
+                    <div class="member-count-badge">${r.memberCount} members <span id="unread-${r.id}" class="unread-badge"></span></div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div class="squad-sport-icon">${r.emoji}</div>
+                        <div><h3 style="font-size: 1.1rem; margin:0;">${r.name}</h3><span style="font-size: 0.75rem; color: var(--accent-primary);">${r.sport} • ${r.city}</span></div>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 5px;">${r.description}</p>
+                    <div style="margin-top: auto; padding-top: 10px; border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 0.7rem; color: var(--accent-primary); font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70%;">
+                            <i class="fas fa-comment-dots" style="margin-right: 5px;"></i>${r.lastMsg}
+                        </span>
+                        <span style="font-size: 0.65rem; color: var(--text-secondary); opacity: 0.7;">${r.lastTime}</span>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function deleteMemory(id) {
-            if(!confirm("Delete this local memory?")) return;
-            
-            // Check both common local keys to be thorough
-            const keys = ['ss_memories_offline', 'ss_memories_v1', 'ss_memories'];
-            let found = false;
+        async function openChatRoom(roomId) {
+            const room = DEMO_ROOMS.find(r => r.id === roomId); if(!room) return;
+            activeChatRoomId = roomId;
+            localStorage.setItem(`ss_last_seen_${roomId}`, Date.now());
+            document.getElementById('chat-room-name').innerHTML = `<span class="online-dot"></span> ${room.name}`;
+            document.getElementById('chat-room-icon').innerText = room.emoji;
+            document.getElementById('chat-room-members').innerText = `${room.memberCount} Members`;
+            document.getElementById('chat-overlay').style.display = 'flex';
+            const feed = document.getElementById('chat-messages-feed');
+            feed.innerHTML = '<div style="text-align:center; padding:2rem; color:var(--text-secondary);"><i class="fas fa-circle-notch fa-spin"></i></div>';
+            startRealTimeChat(roomId); listenTyping(roomId);
+        }
 
-            keys.forEach(key => {
-                let memories = JSON.parse(localStorage.getItem(key) || "[]");
-                if (memories.length > 0) {
-                    const initialLength = memories.length;
-                    memories = memories.filter(m => String(m.id) !== String(id));
-                    if (memories.length !== initialLength) {
-                        localStorage.setItem(key, JSON.stringify(memories));
-                        found = true;
-                    }
-                }
+        function closeChatRoom() {
+            if(activeChatRoomId) { localStorage.setItem(`ss_last_seen_${activeChatRoomId}`, Date.now()); updateTypingStatus(false); }
+            document.getElementById('chat-overlay').style.display = 'none';
+            if(chatUnsubscribe) chatUnsubscribe(); if(typingUnsubscribe) typingUnsubscribe();
+            activeChatRoomId = null;
+        }
+
+        async function startRealTimeChat(roomId) {
+            const { db, methods } = window.SS_FB;
+            const msgCol = methods.collection(db, `squad_chat_rooms/${roomId}/messages`);
+            const q = methods.query(msgCol, methods.orderBy("timestamp", "asc"));
+            const snap = await methods.getDocs(msgCol); if(snap.empty) await seedChatRoom(roomId);
+            chatUnsubscribe = methods.onSnapshot(q, (snapshot) => {
+                const msgs = []; snapshot.forEach(doc => msgs.push(doc.data()));
+                renderMessages(msgs);
             });
-            
-            if (found) {
-                showToast("✅ Memory removed.");
-                renderMemories();
-            } else {
-                showToast("⚠️ Memory not found in local storage.");
-                renderMemories(); // Refresh anyway
-            }
         }
-        
-        // Auth Listener
-        document.addEventListener('DOMContentLoaded', () => {
-            const checkFB = setInterval(() => {
-                if (window.SS_FB) {
-                    clearInterval(checkFB);
-                    window.SS_FB.methods.onAuthStateChanged(window.SS_FB.auth, (user) => {
-                        if (user) {
-                            document.getElementById('user-welcome').innerText = `Hello, ${user.displayName || 'Sportsman'}!`;
-                            renderMemories();
-                        } else {
-                            // Local fallback for demo
-                            const localData = JSON.parse(localStorage.getItem('user_data') || '{}');
-                            if (localData.name) document.getElementById('user-welcome').innerText = `Hello, ${localData.name}!`;
-                        }
-                    });
-                }
-            }, 500);
-        });
 
-        async function updateStats() {
-            // Load bookings using the same logic as booking.js
-            const STORAGE_KEY = "ss_bookings_v4";
-            let bookings = [];
+        function renderMessages(msgs) {
+            const feed = document.getElementById('chat-messages-feed'), user = window.SS_FB?.auth?.currentUser;
+            if (msgs.length === 0) { feed.innerHTML = '<div style="text-align:center; padding:3rem; color:var(--text-secondary);">No messages yet! 👋</div>'; return; }
+            feed.innerHTML = msgs.map(m => {
+                const isMe = m.senderUid === user?.uid, time = m.timestamp ? formatRelativeTime(m.timestamp.seconds * 1000 || m.timestamp) : 'Just now';
+                return `<div class="msg-group ${isMe ? 'sent' : 'received'}">
+                    ${!isMe ? `<div class="msg-sender-info"><div class="msg-avatar" style="background: ${m.avatarColor}">${m.senderInitials}</div><span class="msg-sender-name">${m.senderName}</span></div>` : ''}
+                    <div class="msg-bubble ${isMe ? 'sent' : 'received'}"><div>${m.text}</div><div class="msg-timestamp">${time}</div></div>
+                </div>`;
+            }).join('') + '<div id="chat-anchor"></div><div id="typing-box" class="typing-indicator"></div>';
+            document.getElementById('chat-anchor')?.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chat-input-msg'), text = input.value.trim(); if(!text || !activeChatRoomId) return;
+            const user = window.SS_FB?.auth?.currentUser; if(!user) return showToast("Login to chat!");
+            const name = user.displayName || user.email.split('@')[0], initials = name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
             try {
-                bookings = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-            } catch(_) {}
+                const { db, methods } = window.SS_FB;
+                await methods.addDoc(methods.collection(db, `squad_chat_rooms/${activeChatRoomId}/messages`), {
+                    text, senderName: name, senderUid: user.uid, senderInitials: initials, avatarColor: nameToColor(name), timestamp: methods.serverTimestamp()
+                });
+                input.value = ''; updateTypingStatus(false);
+            } catch(e) { showToast("Error sending message"); }
+        }
 
-            const activeCountEl = document.getElementById('active-count');
-            const upcomingListEl = document.getElementById('upcoming-list');
+        function handleChatInput() { updateTypingStatus(true); if(typingTimeout) clearTimeout(typingTimeout); typingTimeout = setTimeout(() => updateTypingStatus(false), 3000); }
+        async function updateTypingStatus(isTyping) {
+            if(!activeChatRoomId || !window.SS_FB?.auth?.currentUser) return;
+            const { db, methods } = window.SS_FB, user = window.SS_FB.auth.currentUser;
+            try {
+                const ref = methods.doc(db, `squad_chat_rooms/${activeChatRoomId}/typingUsers`, user.uid);
+                if(isTyping) await methods.setDoc(ref, { name: user.displayName || user.email.split('@')[0], timestamp: Date.now() });
+                else await methods.deleteDoc(ref);
+            } catch(e) {}
+        }
 
-            if (activeCountEl) activeCountEl.innerText = bookings.length;
-            
-            if (upcomingListEl) {
-                if (bookings.length > 0) {
-                    const latest = bookings[0];
-                    upcomingListEl.innerHTML = `
-                        <div class="booking-item glass visible" style="opacity: 1; transform: none;">
-                            <div class="booking-item-icon">${latest.emoji}</div>
-                            <div class="booking-item-info">
-                                <h4>${latest.center}</h4>
-                                <p><i class="fas fa-calendar"></i> ${latest.date} &nbsp;·&nbsp; <i class="fas fa-clock"></i> ${latest.startTime}</p>
-                            </div>
-                            <div style="display: flex; gap: 10px; align-items: center;">
-                                <span class="booking-status-badge">Confirmed</span>
-                                <button class="btn btn-outline" style="padding: 6px 12px; font-size: 0.75rem;" onclick="showTab('bookings')">Details</button>
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    upcomingListEl.innerHTML = `
-                        <div class="glass" style="padding: 2.5rem; text-align: center; color: var(--text-secondary);">
-                            <i class="fas fa-calendar-minus" style="font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                            <p>No upcoming sessions. Time to book one!</p>
-                            <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="showTab('explore')">Book Now</button>
-                        </div>
-                    `;
-                }
+        function listenTyping(roomId) {
+            const { db, methods } = window.SS_FB, q = methods.collection(db, `squad_chat_rooms/${roomId}/typingUsers`);
+            typingUnsubscribe = methods.onSnapshot(q, (snap) => {
+                const box = document.getElementById('typing-box'); if(!box) return;
+                const typers = []; const now = Date.now();
+                snap.forEach(doc => { if(doc.id !== window.SS_FB.auth.currentUser?.uid && (now - doc.data().timestamp < 4000)) typers.push(doc.data().name); });
+                box.innerHTML = typers.length ? `${typers.join(', ')} is typing...` : '';
+            });
+        }
+
+        function nameToColor(name) {
+            const colors = ['#f97316','#10b981','#3b82f6','#ec4899','#f59e0b','#8b5cf6','#06b6d4','#ef4444'];
+            let hash = 0; if(name) for(let i=0; i<name.length; i++) hash = name.charCodeAt(i) + ((hash<<5)-hash);
+            return colors[Math.abs(hash)%colors.length];
+        }
+        function formatRelativeTime(ts) {
+            const d = Math.floor((Date.now()-ts)/1000);
+            if(d<60) return 'Just now'; if(d<3600) return Math.floor(d/60)+'m ago'; return new Date(ts).toLocaleDateString();
+        }
+        async function seedChatRoom(roomId) {
+            const { db, methods } = window.SS_FB;
+            const seeds = {
+                "colombo-padel-crew": [
+                    {n:"Kavin R.",m:18,t:"Morning everyone! Anyone up for this Saturday?"},
+                    {n:"Anika S.",m:15,t:"I'm in! What court are we booking?"},
+                    {n:"Kavin R.",m:14,t:"Thinking Ace Padel Club, court 2"},
+                    {n:"Nimal D.",m:10,t:"Count me in 🙌 I'll bring my new racket lol"},
+                    {n:"Anika S.",m:8,t:"Haha Nimal always with the new gear 😂"},
+                    {n:"Priya W.",m:5,t:"Can I join? I'm intermediate level"},
+                    {n:"Kavin R.",m:4,t:"Of course! The more the merrier 🎾"}
+                ],
+                "kandy-futsal-kings": [
+                    {n:"Thisara M.",m:25,t:"Lads, Sunday 5PM confirmed at Arena Futsal?"},
+                    {n:"Ruwan K.",m:20,t:"Yes bro, I already told the others"},
+                    {n:"Sachith B.",m:18,t:"I might be 10 mins late, traffic from Peradeniya"},
+                    {n:"Thisara M.",m:17,t:"No problem, we'll warm up without you 😂"},
+                    {n:"Ruwan K.",m:12,t:"Someone bring a spare ball just in case"},
+                    {n:"Sachith B.",m:8,t:"I got it 👍"},
+                    {n:"Thisara M.",m:4,t:"See you Sunday ⚽"}
+                ],
+                "galle-beach-volleyball": [
+                    {n:"Dilshan P.",m:30,t:"Weekend session is ON ☀️ Galle face, 7AM"},
+                    {n:"Sanduni R.",m:25,t:"Yesss! Don't forget sunscreen people 😎"},
+                    {n:"Malith C.",m:20,t:"I'm bringing snacks this time haha"},
+                    {n:"Dilshan P.",m:18,t:"King behaviour Malith 🙏"},
+                    {n:"Sanduni R.",m:12,t:"Can we get 2 more? Need even teams"},
+                    {n:"Malith C.",m:6,t:"Perfect, we're set then! 🏐"},
+                    {n:"Dilshan P.",m:2,t:"See everyone Sunday, let's gooo"}
+                ],
+                "colombo-badminton-club": [
+                    {n:"Anika S.",m:40,t:"Court booked for 6:30AM, Smash Center court 1"},
+                    {n:"Faizan A.",m:35,t:"Bro texting at this hour 😭 committed fr"},
+                    {n:"Anika S.",m:34,t:"Badminton waits for no one 😤"},
+                    {n:"Ruhan J.",m:28,t:"On my way, 10 mins out"},
+                    {n:"Faizan A.",m:22,t:"Me too. Someone save me a shuttlecock lol"},
+                    {n:"Anika S.",m:15,t:"Already warming up, you're both slow 😂"},
+                    {n:"Ruhan J.",m:5,t:"Let's get it! First game starts now"}
+                ]
+            };
+            for (const s of (seeds[roomId] || [])) {
+                await methods.addDoc(methods.collection(db, `squad_chat_rooms/${roomId}/messages`), { 
+                    text: s.t, 
+                    senderName: s.n, 
+                    senderUid: "seed-uid", 
+                    senderInitials: s.n.split(' ').map(x=>x[0]).join('').substring(0,2), 
+                    avatarColor: nameToColor(s.n), 
+                    timestamp: Date.now()-(s.m*60000) 
+                });
             }
         }
 
-        // Bridge to ensure booking.js updates us
-        const originalSaveBookings = window.saveBookings;
-        window.saveBookings = async function(b) {
-            if (originalSaveBookings) await originalSaveBookings(b);
-            updateStats();
-        };
+        async function handlePostSquadSlot(e) {
+            e.preventDefault(); const user = window.SS_FB?.auth?.currentUser; if(!user) return showToast("Login to post!");
+            const data = { sport: document.getElementById('squad-sport').value, venue: document.getElementById('squad-venue').value, city: document.getElementById('squad-city').value, datetime: document.getElementById('squad-datetime').value, playersNeeded: parseInt(document.getElementById('squad-players').value), skillLevel: document.getElementById('squad-skill').value, message: document.getElementById('squad-message').value, postedBy: user.uid, postedByName: user.displayName || "Member", joiners: [], status: "open", createdAt: window.SS_FB.methods.serverTimestamp() };
+            try { showToast("Publishing..."); await window.SS_FB.methods.addDoc(window.SS_FB.methods.collection(window.SS_FB.db, "squad_slots"), data); showToast("Success!"); e.target.reset(); togglePostSlotForm(); } catch(e) { showToast("Failed"); }
+        }
+
+        function togglePostSlotForm() { const f = document.getElementById('post-slot-form'); f.style.display = f.style.display==='none'?'block':'none'; }
+        
+        async function updateStats() {
+            const b = JSON.parse(localStorage.getItem("ss_bookings_v4") || "[]");
+            document.getElementById('active-count').innerText = b.length;
+            const up = document.getElementById('upcoming-list');
+            if(up) up.innerHTML = b.length ? `<div class="booking-item glass visible"><div class="booking-item-icon">${b[0].emoji}</div><div class="booking-item-info"><h4>${b[0].center}</h4><p>${b[0].date} • ${b[0].startTime}</p></div></div>` : '<p>No upcoming sessions.</p>';
+        }
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Session Validation (1 Hour Expiry)
-            const rawData = localStorage.getItem('user_data');
-            if (!rawData) {
-                window.location.href = 'user-auth.html';
-                return;
-            }
-
-            const userData = JSON.parse(rawData);
-            const ONE_HOUR = 60 * 60 * 1000;
-            if (!userData.loginTime || (Date.now() - userData.loginTime > ONE_HOUR)) {
-                localStorage.removeItem('user_data');
-                window.location.href = 'user-auth.html';
-                return;
-            }
-
-            if (userData.name) {
-                document.getElementById('user-welcome').innerText = `Hello, ${userData.name}!`;
-            }
-            // Trigger initial render with multiple checks to handle async data
-            const refreshAll = () => {
-                updateStats();
-                if (window.renderCenters) window.renderCenters();
-                if (window.renderMyBookings) {
-                    window.renderMyBookings();
-                    // Force visibility for dashboard items
-                    document.querySelectorAll('#my-bookings-list .fade-up').forEach(el => el.classList.add('visible'));
-                }
-            };
-
-            setTimeout(refreshAll, 100);
-            setTimeout(refreshAll, 500); // Secondary check for slow storage
+            const chatInput = document.getElementById('chat-input-msg'); if(chatInput) chatInput.addEventListener('input', handleChatInput);
+            if(!localStorage.getItem('user_data')) window.location.href='user-auth.html';
+            const ud = JSON.parse(localStorage.getItem('user_data') || '{}');
+            if(ud.name) document.getElementById('user-welcome').innerText = `Hello, ${ud.name}!`;
+            setTimeout(updateStats, 500);
         });
     </script>
     <!-- 
@@ -1632,12 +2033,27 @@
           allow read: if request.auth != null;
           allow create: if request.auth != null && request.resource.data.postedBy == request.auth.uid;
           allow update: if request.auth != null && (
-            // Allow joining: only if playersNeeded > 0 and user isn't already a joiner
             (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['joiners', 'playersNeeded', 'status'])) ||
-            // Allow creator to edit/delete
             (resource.data.postedBy == request.auth.uid)
           );
           allow delete: if request.auth != null && resource.data.postedBy == request.auth.uid;
+        }
+
+        // Squad Chat Rules
+        match /squad_chat_rooms/{roomId} {
+          allow read: if request.auth != null;
+          allow create: if request.auth != null;
+          allow update: if request.auth != null;
+          
+          match /messages/{msgId} {
+            allow read: if request.auth != null;
+            allow create: if request.auth != null && request.resource.data.senderUid == request.auth.uid;
+          }
+
+          match /typingUsers/{uid} {
+            allow read: if request.auth != null;
+            allow write: if request.auth != null && request.auth.uid == uid;
+          }
         }
 
         // Memories Rules
@@ -1650,6 +2066,13 @@
         // Health History Rules
         match /users/{userId}/health_history/{recordId} {
           allow read, write: if request.auth != null && request.auth.uid == userId;
+        }
+
+        // Cost Split Rules
+        match /cost_splits/{splitId} {
+          allow read: if request.auth != null;
+          allow create: if request.auth != null && request.resource.data.createdBy == request.auth.uid;
+          allow update, delete: if request.auth != null && resource.data.createdBy == request.auth.uid;
         }
       }
     }
