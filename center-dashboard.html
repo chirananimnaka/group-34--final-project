@@ -257,19 +257,19 @@
 
                 <div class="stat-grid">
                     <div class="glass stat-card">
-                        <i class="fas fa-calendar-day"></i>
-                        <h3>Today's Bookings</h3>
-                        <p id="stat-bookings">12</p>
+                        <i class="fas fa-calendar-check"></i>
+                        <h3>Total Bookings</h3>
+                        <p id="stat-bookings">0</p>
                     </div>
                     <div class="glass stat-card">
                         <i class="fas fa-coins"></i>
-                        <h3>Total Revenue</h3>
-                        <p id="stat-revenue">Rs. 45,000</p>
+                        <h3>Net Revenue</h3>
+                        <p id="stat-revenue">Rs. 0</p>
                     </div>
                     <div class="glass stat-card">
-                        <i class="fas fa-users"></i>
-                        <h3>Unique Users</h3>
-                        <p id="stat-users">84</p>
+                        <i class="fas fa-percentage" style="color: #fbbf24;"></i>
+                        <h3>Commission Due</h3>
+                        <p id="stat-commission">Rs. 0</p>
                     </div>
                 </div>
 
@@ -291,44 +291,44 @@
                 </div>
                 
                 <div class="pricing-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
-                    <!-- Base Utility -->
+                    <!-- Normal Tier (Tier 1) -->
                     <div class="glass price-card" id="plan-base" style="padding: 2.5rem; border-radius: 24px; position: relative; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; background: rgba(255,255,255,0.02);">
-                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Base Utility</h3>
-                        <div style="font-size: 2rem; font-weight: 800; color: white; margin-bottom: 1.5rem;">LKR 15,000<span style="font-size: 1rem; color: var(--text-secondary);">/mo</span></div>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Normal Tier</h3>
+                        <div style="font-size: 2rem; font-weight: 800; color: white; margin-bottom: 1.5rem;">2.5%<span style="font-size: 1rem; color: var(--text-secondary);"> / booking</span></div>
                         <ul style="list-style: none; margin-bottom: 2.5rem; display: flex; flex-direction: column; gap: 12px; padding: 0;">
-                            <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> 2 Active Courts</li>
+                            <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> Standard Commission</li>
+                            <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> Up to 15 Bookings /mo</li>
                             <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> Real-time Scheduler</li>
                             <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> Member Profiles</li>
-                            <li style="opacity: 0.5;"><i class="fas fa-times" style="color: #ef4444; margin-right: 10px;"></i> AI Yield Analytics</li>
                         </ul>
-                        <button class="btn btn-outline" style="width: 100%; border-radius: 12px;" onclick="selectDashboardPlan('base')">Select Plan</button>
+                        <button class="btn btn-outline" style="width: 100%; border-radius: 12px;" onclick="selectDashboardPlan('base')">Current Plan</button>
                     </div>
 
-                    <!-- Elite Pro -->
+                    <!-- Growth Tier (Tier 2) -->
                     <div class="glass price-card" id="plan-elite" style="padding: 2.5rem; border-radius: 24px; position: relative; border: 2px solid #8b5cf6; background: rgba(139, 92, 246, 0.05); transition: 0.3s;">
-                        <div style="position: absolute; top: 15px; right: 15px; background: #8b5cf6; color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: 700;">MOST POPULAR</div>
-                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Elite Pro</h3>
-                        <div style="font-size: 2rem; font-weight: 800; color: white; margin-bottom: 1.5rem;">LKR 45,000<span style="font-size: 1rem; color: var(--text-secondary);">/mo</span></div>
+                        <div style="position: absolute; top: 15px; right: 15px; background: #fbbf24; color: black; padding: 4px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: 700;">LEVEL 2 GROWTH</div>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Growth Tier</h3>
+                        <div style="font-size: 2rem; font-weight: 800; color: white; margin-bottom: 1.5rem;">3.0%<span style="font-size: 1rem; color: var(--text-secondary);"> / booking</span></div>
                         <ul style="list-style: none; margin-bottom: 2.5rem; display: flex; flex-direction: column; gap: 12px; padding: 0;">
-                            <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> Unlimited Courts</li>
+                            <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> High Volume Support</li>
+                            <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> 15 - 25 Bookings /mo</li>
                             <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> AI Yield Optimization</li>
                             <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> Revenue Forecasts</li>
-                            <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> White-label Portal</li>
                         </ul>
-                        <button class="btn btn-primary" style="width: 100%; border-radius: 12px;" onclick="selectDashboardPlan('elite')">Go Elite</button>
+                        <button class="btn btn-primary" style="width: 100%; border-radius: 12px;" onclick="selectDashboardPlan('elite')">Unlock Growth</button>
                     </div>
 
-                    <!-- Institutional -->
+                    <!-- Pro Tier (Tier 3) -->
                     <div class="glass price-card" id="plan-institutional" style="padding: 2.5rem; border-radius: 24px; position: relative; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; background: rgba(255,255,255,0.02);">
-                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Institutional</h3>
-                        <div style="font-size: 2rem; font-weight: 800; color: white; margin-bottom: 1.5rem;">LKR 95,000<span style="font-size: 1rem; color: var(--text-secondary);">/mo</span></div>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Pro Tier</h3>
+                        <div style="font-size: 2rem; font-weight: 800; color: white; margin-bottom: 1.5rem;">3.5%<span style="font-size: 1rem; color: var(--text-secondary);"> / booking</span></div>
                         <ul style="list-style: none; margin-bottom: 2.5rem; display: flex; flex-direction: column; gap: 12px; padding: 0;">
+                            <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> Enterprise Excellence</li>
+                            <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> More than 25 Bookings /mo</li>
                             <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> Multi-center Sync</li>
-                            <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> API Infrastructure</li>
-                            <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> Priority Node Support</li>
                             <li><i class="fas fa-check" style="color: #10b981; margin-right: 10px;"></i> Custom AI Models</li>
                         </ul>
-                        <button class="btn btn-outline" style="width: 100%; border-radius: 12px;" onclick="selectDashboardPlan('institutional')">Contact Enterprise</button>
+                        <button class="btn btn-outline" style="width: 100%; border-radius: 12px;" onclick="selectDashboardPlan('institutional')">Scale Institution</button>
                     </div>
                 </div>
 
@@ -461,21 +461,26 @@
                     </button>
                 </div>
 
-                <div class="stat-grid">
+                <div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
                     <div class="glass stat-card" style="border-left: 4px solid #10b981;">
                         <h3>Total Gross</h3>
                         <p id="rev-total">Rs. 0</p>
-                        <small style="color: #10b981;">+12% vs last week</small>
+                        <small style="color: #10b981; font-weight:600;">Overall User Payments</small>
+                    </div>
+                    <div class="glass stat-card" style="border-left: 4px solid #fbbf24;">
+                        <h3>Commission Fee</h3>
+                        <p id="rev-commission" style="color: #fbbf24;">Rs. 0</p>
+                        <small id="rev-comm-rate" style="color: var(--text-secondary);">Rate: 2.5%</small>
                     </div>
                     <div class="glass stat-card" style="border-left: 4px solid #0ea5e9;">
+                        <h3>Net Revenue</h3>
+                        <p id="rev-net">Rs. 0</p>
+                        <small style="color: #0ea5e9; font-weight:600;">Your Actual Earnings</small>
+                    </div>
+                    <div class="glass stat-card" style="border-left: 4px solid #8b5cf6;">
                         <h3>Instant Paid</h3>
                         <p id="rev-paid">Rs. 0</p>
                         <small style="color: var(--text-secondary);">Verified Transactions</small>
-                    </div>
-                    <div class="glass stat-card" style="border-left: 4px solid #f59e0b;">
-                        <h3>Pay Later (Pending)</h3>
-                        <p id="rev-pending">Rs. 0</p>
-                        <small style="color: #f59e0b;">Collection Required</small>
                     </div>
                 </div>
 
@@ -827,12 +832,26 @@
                 fullContainer.innerHTML = `<div class="glass" style="padding: 3rem; color: var(--text-secondary); text-align: center;">No reservations found for your center.</div>`;
                 document.getElementById('stat-bookings').innerText = '0';
                 document.getElementById('stat-revenue').innerText = 'Rs. 0';
+                if(document.getElementById('stat-commission')) document.getElementById('stat-commission').innerText = 'Rs. 0';
                 return;
             }
 
-            let revenue = 0;
+            // Commission Calculation Logic (Tiered)
+            const bookingCount = myBookings.length;
+            let commRate = 0.025; // Default Level 1
+            let levelName = "Level 1: Normal";
+            
+            if (bookingCount > 25) {
+                commRate = 0.035;
+                levelName = "Level 3: Pro";
+            } else if (bookingCount > 15) {
+                commRate = 0.03;
+                levelName = "Level 2: Growth";
+            }
+
+            let totalGross = 0;
             const html = myBookings.map(b => {
-                revenue += b.total;
+                totalGross += b.total;
                 return `
                     <div class="glass" style="padding: 1.5rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
                         <div>
@@ -848,18 +867,25 @@
                 `;
             }).join('');
 
+            const commission = totalGross * commRate;
+            const netRevenue = totalGross - commission;
+
             container.innerHTML = html;
             fullContainer.innerHTML = html;
-            document.getElementById('stat-bookings').innerText = myBookings.length;
-            document.getElementById('stat-revenue').innerText = `Rs. ${revenue.toLocaleString()}`;
+            
+            // Update Overview Stats
+            document.getElementById('stat-bookings').innerText = bookingCount;
+            document.getElementById('stat-revenue').innerText = `Rs. ${netRevenue.toLocaleString()}`;
+            if(document.getElementById('stat-commission')) document.getElementById('stat-commission').innerText = `Rs. ${commission.toLocaleString()}`;
 
             // Update Revenue Tab Granular Stats
-            const paidRevenue = myBookings.reduce((sum, b) => sum + (b.status && b.status.includes('Paid') ? b.total : 0), 0);
-            const pendingRevenue = revenue - paidRevenue;
-
-            document.getElementById('rev-total').innerText = `Rs. ${revenue.toLocaleString()}`;
-            document.getElementById('rev-paid').innerText = `Rs. ${paidRevenue.toLocaleString()}`;
-            document.getElementById('rev-pending').innerText = `Rs. ${pendingRevenue.toLocaleString()}`;
+            const paidGross = myBookings.reduce((sum, b) => sum + (b.status && b.status.includes('Paid') ? b.total : 0), 0);
+            
+            document.getElementById('rev-total').innerText = `Rs. ${totalGross.toLocaleString()}`;
+            document.getElementById('rev-commission').innerText = `Rs. ${commission.toLocaleString()}`;
+            document.getElementById('rev-comm-rate').innerText = `Rate: ${(commRate * 100).toFixed(1)}% (${levelName})`;
+            document.getElementById('rev-net').innerText = `Rs. ${netRevenue.toLocaleString()}`;
+            document.getElementById('rev-paid').innerText = `Rs. ${paidGross.toLocaleString()}`;
 
             initYieldChart(myBookings);
         }
@@ -1060,9 +1086,9 @@
 
     <script>
         const PLANS = {
-            'base': { name: 'Base Utility', price: 15000, features: ['2 Active Courts', 'Real-time Scheduler', 'Member Profiles'] },
-            'elite': { name: 'Elite Pro', price: 45000, features: ['Unlimited Courts', 'AI Yield Optimization', 'Revenue Forecasts', 'White-label Portal'] },
-            'institutional': { name: 'Institutional', price: 95000, features: ['Multi-center Sync', 'API Infrastructure Access', 'Priority Node Support', 'Custom AI Models'] }
+            'base': { name: 'Normal Tier', rate: '2.5%', features: ['Standard Commission', 'Up to 15 Bookings /mo', 'Real-time Scheduler', 'Member Profiles'] },
+            'elite': { name: 'Growth Tier', rate: '3.0%', features: ['Enhanced Growth', '15 - 25 Bookings /mo', 'AI Yield Optimization', 'Revenue Forecasts'] },
+            'institutional': { name: 'Pro Tier', rate: '3.5%', features: ['Elite Performance', 'More than 25 Bookings /mo', 'Multi-center Sync', 'Custom AI Models'] }
         };
 
 
@@ -1134,9 +1160,9 @@
             const payPlanAmountEl = document.getElementById('pay-plan-amount');
 
             if (planNameEl) planNameEl.innerText = plan.name;
-            if (planPriceEl) planPriceEl.innerText = `LKR ${plan.price.toLocaleString()}`;
-            if (payPlanTitleEl) payPlanTitleEl.innerText = `${plan.name} Subscription`;
-            if (payPlanAmountEl) payPlanAmountEl.innerText = `Rs. ${plan.price.toLocaleString()} / month`;
+            if (planPriceEl) planPriceEl.innerText = `${plan.rate} Commission`;
+            if (payPlanTitleEl) payPlanTitleEl.innerText = `${plan.name} Partner Plan`;
+            if (payPlanAmountEl) payPlanAmountEl.innerText = `${plan.rate} per every user payment`;
 
             const list = document.getElementById('plan-features-list');
             if (list) {
