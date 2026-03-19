@@ -1124,6 +1124,23 @@
         </main>
     </div>
 
+    <!-- ══════════════════════════════════════════
+         STANDARD BOOKING SYSTEM MODALS
+    ══════════════════════════════════════════ -->
+    <div class="modal-overlay" id="booking-modal" style="z-index: 4000;">
+        <div class="modal-box glass" style="max-width: 650px;">
+            <button class="modal-close-btn" onclick="closeBookingModal()"><i class="fas fa-times"></i></button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="payment-modal" style="z-index: 4001;">
+        <div class="modal-box glass" style="max-width: 500px;">
+            <button class="modal-close-btn" onclick="document.getElementById('payment-modal').classList.remove('open')"><i class="fas fa-times"></i></button>
+            <div id="payment-content"></div>
+        </div>
+    </div>
+
     <!-- CHAT OVERLAY -->
     <div id="chat-overlay" class="chat-overlay">
         <div class="chat-container glass">
@@ -1172,10 +1189,10 @@
         </div>
     </div>
 
-    <!-- PAYMENT MODAL -->
-    <div class="modal-overlay" id="payment-modal" style="z-index: 3000;">
+    <!-- COST SPLIT PAYMENT MODAL (Renamed to avoid conflict) -->
+    <div class="modal-overlay" id="split-payment-modal" style="z-index: 3000;">
         <div class="modal-box glass" style="max-width: 420px; padding: 2.5rem;">
-            <button class="modal-close-btn" onclick="closePaymentModal()"><i class="fas fa-times"></i></button>
+            <button class="modal-close-btn" onclick="closeSplitPaymentModal()"><i class="fas fa-times"></i></button>
             <h3 style="margin-bottom: 1.5rem;">Complete Payment</h3>
             
             <div style="text-align: center; margin-bottom: 2rem;">
@@ -1184,8 +1201,8 @@
             </div>
 
             <div class="split-method-toggles">
-                <div class="split-method-btn active" id="pay-method-card" onclick="setPayMethod('card')">💳 Card</div>
-                <div class="split-method-btn" id="pay-method-later" onclick="setPayMethod('later')">🏦 Pay Later</div>
+                <div class="split-method-btn active" id="pay-method-card" onclick="setSplitPayMethod('card')">💳 Card</div>
+                <div class="split-method-btn" id="pay-method-later" onclick="setSplitPayMethod('later')">🏦 Pay Later</div>
             </div>
 
             <div id="card-fields-wrap">
@@ -1480,7 +1497,7 @@
                     ${s.paid ? `
                         <button class="btn btn-outline" style="width: 100%;" onclick="showToast('Showing split breakdown...')">View Split Details</button>
                     ` : `
-                        <button class="btn btn-primary" style="width: 100%;" id="pay-btn-${s.id}" onclick="openPaymentModal('${s.id}', ${s.share})">Pay My Share</button>
+                        <button class="btn btn-primary" style="width: 100%;" id="pay-btn-${s.id}" onclick="openSplitPaymentModal('${s.id}', ${s.share})">Pay My Share</button>
                     `}
                 </div>
             `).join('');
@@ -1497,26 +1514,32 @@
             }
         }
 
-        // Payment Modal Logic
+        // Split Payment Modal Logic
         let activePaymentSplitId = null;
         let activePaymentAmount = 0;
         let currentPayMethod = 'card';
 
-        function openPaymentModal(id, amount) {
+        function openSplitPaymentModal(id, amount) {
             activePaymentSplitId = id;
             activePaymentAmount = amount;
             document.getElementById('payment-amount-display').innerText = `LKR ${amount}`;
-            document.getElementById('payment-modal').style.display = 'flex';
+            document.getElementById('split-payment-modal').style.display = 'flex';
         }
 
-        function closePaymentModal() { document.getElementById('payment-modal').style.display = 'none'; }
+        function closeSplitPaymentModal() { document.getElementById('split-payment-modal').style.display = 'none'; }
 
-        function setPayMethod(method) {
+        function setSplitPayMethod(method) {
             currentPayMethod = method;
             document.getElementById('pay-method-card').classList.toggle('active', method === 'card');
             document.getElementById('pay-method-later').classList.toggle('active', method === 'later');
             document.getElementById('card-fields-wrap').style.display = method === 'card' ? 'block' : 'none';
             document.getElementById('pay-later-wrap').style.display = method === 'later' ? 'block' : 'none';
+        }
+
+        // Standard closePaymentModal needed for js/booking.js
+        window.closePaymentModal = function() {
+            const m = document.getElementById('payment-modal');
+            if (m) m.classList.remove('open');
         }
 
         function confirmSplitPayment() {
